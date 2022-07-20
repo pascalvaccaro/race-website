@@ -2,6 +2,9 @@
 	import { run, setRunner, needs } from '$lib/store/run';
 	import SmartInput from '$lib/components/SmartInput.svelte';
 	import FileInput from '$lib/components/FileInput.svelte';
+	import CheckInput from '$lib/components/CheckInput.svelte';
+	import RadioInput from '$lib/components/RadioInput.svelte';
+	import Panel from '$lib/components/Panel.svelte';
 
 	export let race: App.Race;
 
@@ -16,50 +19,53 @@
 	<h2 class="disclaimer">
 		La prochaine course a lieu le {race.startDate} à {race.startTime} au parc {race.parcours.name}
 	</h2>
-	<input placeholder="Ton adresse email" type="email" name="runner.email" on:change={onChangeEmail} />
+	<input placeholder="Adresse email" type="email" required name="runner.email" on:change={onChangeEmail} />
 
 	<SmartInput name="runnerId">
 		<div class="two-cols">
-			<input placeholder="Ton prénom" name="runner.firstName" bind:value={$run.runner.firstName} />
-			<input placeholder="Ton nom de famille" name="runner.lastName" bind:value={$run.runner.lastName} />
+			<input placeholder="Prénom" required name="runner.firstName" bind:value={$run.runner.firstName} />
+			<input placeholder="Nom de famille" required name="runner.lastName" bind:value={$run.runner.lastName} />
 		</div>
 		<input type="hidden" name="run.runner" bind:value={$run.runner.id} />
 		<input type="hidden" name="runner.id" bind:value={$run.runner.id} />
 	</SmartInput>
 
   <div class="two-cols">
-    <label>
-      Je marche (et promets de ne pas courir !)
-      <input type="checkbox" name="run.walking" bind:checked={$run.walking} />
-    </label>
-    <label>
+    <CheckInput name="run.walking" bind:value={$run.walking}>
+      <span>Je marche <br/> <small>(et promets de ne pas courir !)</small></span>
+		</CheckInput>
+    <CheckInput name="run.copyright" bind:value={$run.copyright}>
       Je donne mon droit à l'image
-      <input type="checkbox" name="run.copyright" bind:checked={$run.copyright} />
-    </label>
-  </div>
-  <div class="two-cols">
-    <label>
-      Je suis mineur
-      <input type="checkbox" name="runner.minor" bind:checked={$run.runner.minor} />
-    </label>
-    <label>
-      Je suis mineur et j'ai moins de 16 ans
-      <input type="checkbox" name="runner.child" bind:checked={$run.runner.child} />
-    </label>
+		</CheckInput>
   </div>
 
 	{#if $needs.certificate}
 		<label for="certificate">
 			Mon certificat médical datant d'il y a moins d'un an
-			<FileInput name="files.certificates" />
+			<FileInput name="files.certificates" required />
 		</label>
 	{/if}
-	{#if $needs.authorization}
-		<label for="authorization">
-			Mon autorisation parentale
-			<FileInput name="files.authorizations" />
-		</label>
-	{/if}
+
+	<Panel title="Je suis mineur et..." bind:value={$run.runner.minor}>
+		<div class="two-cols">
+			<RadioInput name="runner.child" value={false} bind:group={$run.runner.child}>
+				j'ai entre 16 et 18 ans
+			</RadioInput>
+			<RadioInput name="runner.child" value={true} bind:group={$run.runner.child}>
+				j'ai moins de 16 ans
+			</RadioInput>
+		</div>
+		{#if $needs.authorization}
+			<label for="authorization">
+				Mon autorisation parentale
+				<FileInput name="files.authorizations" required />
+			</label>
+		{:else if $needs.parents}
+			<p class="alert">
+				Les mineur-es de moins de 16 ans doivent impérativement être accompagné-es d'un adulte pendant toute la course !
+			</p>
+		{/if}
+	</Panel>
 
 	<input type="hidden" name="run.race" value={race.id} />
 
@@ -81,18 +87,8 @@
     margin: 0;
     text-align: center;
   }
-	label,
-	input {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		background-color: white;
+	label, input {
 		padding: 8px 16px;
-		min-height: 1rem;
-    box-shadow: 1px 1px 1px;
-    outline: none;
-    border-radius: 4px;
-    border: 0;
 	}
   input {
     max-height: 1.5rem;
@@ -104,23 +100,6 @@
     font-style: italic;
     margin-bottom: 4px;
   }
-
-	.two-cols {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-    width: 100%;
-	}
-	.two-cols > *:last-child {
-		margin-left: 8px;
-	}
-	.two-cols > *:first-child {
-		margin-right: 8px;
-	}
-	.two-cols > * {
-		width: calc(50% - 32px);
-	}
-
 	button {
 		height: 2.5rem;
 		text-transform: uppercase;

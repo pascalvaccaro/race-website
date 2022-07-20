@@ -26,22 +26,14 @@ export const setRunner = async (runner: Partial<App.Runner>) => {
 		}
 	}));
 };
-export const setBoolean = (field: keyof App.Run, value: boolean) =>
-	run.update((state) => ({
-		...state,
-		[field]: value
-	}));
 
 export const needs = derived(run, (value) => ({
-	attestation:
-		value.walking &&
-		(!value.runner.attestations?.length ||
-			!value.runner.attestations.some((attest) => attest.valid)),
 	certificate:
 		!value.walking &&
 		(!value.runner.certificates?.length ||
 			!value.runner.certificates.some(
 				(certif) => new Date(certif.expiration as Date).getTime() > new Date().getTime()
 			)),
-  authorization: value.runner.minor
+  authorization: value.runner.minor && !value.runner.child,
+	parents: value.runner.minor && value.runner.child,
 }));
