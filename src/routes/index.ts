@@ -1,6 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { FormData } from 'formdata-node';
-import { createRunner, findNextPublicRace, registerRun, updateRunner } from '$lib/strapi';
+import { findNextPublicRace, registerRun, createOrUpdateRunner } from '$lib/strapi';
 
 export async function GET() {
 	const race = await findNextPublicRace();
@@ -19,7 +18,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	const run = {} as App.Run;
 	const runner = {} as App.Runner;
-	const runnerForm = new FormData();
+	const attachments = [] as FormDataEntryValue[];
 
 	data.forEach((value, key) => {
 		const [modelName, fieldName] = key.split('.');
@@ -64,7 +63,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				switch (fieldName) {
 					case 'attestations':
 					case 'certificates':
-						runnerForm.append(`files.attachment`, value);
+						attachments.push(value);
 						// case 'authorizations':
 						runner[fieldName].push({
 							__component: `medical.${fieldName.slice(0, -1)}`,
@@ -76,10 +75,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 	});
 
-  const method = runner.id ? updateRunner : createRunner;
-  runnerForm.append('data', JSON.stringify(runner));
   try {
-    run.runner = await method(runnerForm, (runner.id ?? "").toString());
+    run.runner = await createOrUpdateRunner({ runner, attachments });
   } catch (e) {
     // nothing to do
   }

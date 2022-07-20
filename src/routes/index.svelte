@@ -48,12 +48,7 @@
     </label>
   </div>
 
-	{#if $needs.attestation}
-		<label for="attestation">
-			Mon attestation de marche
-			<FileInput name="files.attestations" />
-		</label>
-	{:else if $needs.certificate}
+	{#if $needs.certificate}
 		<label for="certificate">
 			Mon certificat médical datant d'il y a moins d'un an
 			<FileInput name="files.certificates" />

@@ -1,4 +1,4 @@
-import type { FormData } from 'formdata-node';
+import { FormData } from 'formdata-node';
 
 export const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
 
@@ -60,28 +60,22 @@ export const registerRun = async (run: App.Run) => {
 		.then((res) => res.data);
 };
 
-export const createRunner = async (body: FormData, method = "POST"): Promise<App.Runner> => {
-	const endpoint = new URL('/api/runners', STRAPI_URL);
+export const createOrUpdateRunner = async ({ runner, attachments }: {
+	runner: Partial<App.Runner>,
+	attachments?: FormDataEntryValue[] 
+}): Promise<App.Runner> => {
+	const exists = Boolean(runner && 'id' in runner && typeof runner.id === 'number');
+	const endpoint = new URL('/api/runners' + (exists ? `/${runner.id}` : ''), STRAPI_URL);
+	const body = new FormData();
+	body.append('data', JSON.stringify(runner));
+	if (attachments && attachments.length) 
+		body.append('files.attachment', attachments);
+
 	const options = {
-		method,
+		method: exists ? 'PUT' : 'POST',
 		body,
 	};
 	return fetch(endpoint, options as any)
-		.then(async (res) => {
-			if (!res.ok) throw new Error(await res.text());
-			const json = await res.json();
-			if (json.error) throw json.error;
-			return json.data;
-		})
-		.then(({ id, attributes }) => ({ id, ...attributes }));
-};
-export const updateRunner = async (body: FormData, runnerId: string): Promise<App.Runner> => {
-	const endpoint = new URL('/api/runners', STRAPI_URL);
-	const options = {
-		method: "PUT",
-		body,
-	};
-	return fetch(endpoint + '/' + runnerId, options as any)
 		.then(async (res) => {
 			if (!res.ok) throw new Error(await res.text());
 			const json = await res.json();
