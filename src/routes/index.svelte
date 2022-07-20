@@ -1,4 +1,6 @@
 <script lang="ts">
+	import dayjs from 'dayjs';
+	import 'dayjs/locale/fr';
 	import { run, setRunner, needs } from '$lib/store/run';
 	import SmartInput from '$lib/components/SmartInput.svelte';
 	import FileInput from '$lib/components/FileInput.svelte';
@@ -7,6 +9,7 @@
 	import Panel from '$lib/components/Panel.svelte';
 
 	export let race: App.Race;
+	let startTime = dayjs(`${race.startDate}T${race.startTime}`).locale('fr').format('dddd D MMMM [à] H [heures]');
 
 	async function onChangeEmail(event: any) {
 		const email = event.target.value;
@@ -17,7 +20,7 @@
 
 <form method="post">
 	<h2 class="disclaimer">
-		La prochaine course a lieu le {race.startDate} à {race.startTime} au parc {race.parcours.name}
+		La prochaine course a lieu le {startTime} au parc {race.parcours.name}
 	</h2>
 	<input placeholder="Adresse email" type="email" required name="runner.email" on:change={onChangeEmail} />
 
