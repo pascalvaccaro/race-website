@@ -4,7 +4,7 @@
 </script>
 
 <div>
-  <p on:click={() => value = !value}>
+  <p data-cy={title} on:click={() => value = !value}>
     {title}
     <span>
       {@html (value ? '&#9660' : '&#9658')}
@@ -22,12 +22,14 @@
 
 <style>
   div {
+    width: calc(100% - 32px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     border-radius: 4px;
     padding: 8px 16px;
     background-color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 8px;
   }
   div > p {
     display: flex;

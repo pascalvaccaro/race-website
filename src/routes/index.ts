@@ -61,13 +61,13 @@ export const POST: RequestHandler = async ({ request }) => {
 				break;
 			case 'files':
 				switch (fieldName) {
-					case 'attestations':
 					case 'certificates':
-						attachments.push(value);
 						// case 'authorizations':
+						attachments.push(value);
+						runner[fieldName] = runner[fieldName] || [];
 						runner[fieldName].push({
 							__component: `medical.${fieldName.slice(0, -1)}`,
-							...(fieldName === 'certificates' ? { expiration: new Date() } : { valid: false })
+							...(fieldName === 'certificates' ? { expiration: new Date() } : null)
 						});
 						break;
 				}
@@ -81,11 +81,13 @@ export const POST: RequestHandler = async ({ request }) => {
     // nothing to do
   }
   try {
-    const body = await registerRun(run);
+    const { id } = await registerRun(run);
     
     return {
-      status: 201,
-      body,
+      status: 303,
+			headers: {
+				location: `/register/${id}`
+			}
     };
   } catch (err: any) {
     return {

@@ -1,13 +1,34 @@
 <div class="wrapper">
-  <slot />
+	<slot />
 </div>
 
 <style>
+	:global(body) {
+		margin: 0;
+		width: 100vw;
+		background-image: url(/banner.png);
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: right;
+		display: flex;
+		justify-content: center;
+	}
   .wrapper {
-    width: 100vw;
+		min-height: 100vh;
+		max-width: 520px;
     display: flex;
-    justify-content: center;
+		flex-direction: column;
+    align-items: center;
+		justify-content: space-around;
   }
+	.wrapper > h2 {
+			margin: 0 16px;
+			padding: 8px 16px;
+			border-radius: 4px;
+			box-shadow: 2px 2px 4px gray;
+			text-align: center;
+			background-color: rgba(255, 255, 255, 0.65)
+		}
   :global(.alert) {
     padding: 4px 8px;
     color: rgba(230, 40, 40);
@@ -23,23 +44,23 @@
     width: 100%;
 	}
 	:global(.two-cols > *:last-child) {
-		margin-left: 8px;
+		margin-left: 4px;
 	}
 	:global(.two-cols > *:first-child) {
-		margin-right: 8px;
+		margin-right: 4px;
 	}
 	:global(.two-cols > *) {
-		width: calc(50% - 32px);
+		width: calc(50% - 16px);
 	}
-  :global(label, input) {
+  :global(label, input, select) {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		background-color: white;
 		min-height: 1rem;
 	}
-	:global(label, input, button) {
-		box-shadow: 1px 1px 1px;
+	:global(label, input, button, select) {
+		box-shadow: 3px 3px 2px black;
 		border: 0;
 		border-radius: 4px;
 		outline: none;

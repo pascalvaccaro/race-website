@@ -12,7 +12,8 @@
     "lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
     "e2e:open": "cypress open",
-    "e2e:run": "cypress run"
+    "e2e:run": "cypress run",
+    "test": "cypress run --config specPattern=cypress/unit/**/*.cy.{js,jsx,ts,tsx}"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",

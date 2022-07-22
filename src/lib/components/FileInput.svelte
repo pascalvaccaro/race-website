@@ -12,12 +12,14 @@
 <style>
   button {
     display: flex;
+    align-items: center;
     outline: none;
-    border: 2px dashed gray;
+    border: 1px dashed gray;
     border-radius: 0.8rem;
-    padding: 1rem;
-    margin: 0 1rem;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
     font-weight: bold;
+    box-shadow: none;
   }
   button input {
     width: 1px;

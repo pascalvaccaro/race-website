@@ -23,6 +23,10 @@
 </div>
 
 <style>
+	select {
+		padding: 4px 16px;
+		min-height: 2.5rem;
+	}
 	.hidden {
 		display: none;
 	}

@@ -1,6 +1,11 @@
 import { FormData } from 'formdata-node';
 
-export const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+export const STRAPI_URL = 'http://localhost:1337';
+
+type StrapiResponse<T = Record<string, { data?: StrapiResponse } | string | number | boolean>> = {
+	id: number;
+	attributes: T;
+}
 
 export const findRunnerByEmail = async (email: string): Promise<Array<App.Runner>> => {
 	const endpoint = new URL('/api/runners', STRAPI_URL);
@@ -57,7 +62,13 @@ export const registerRun = async (run: App.Run) => {
 	};
 	return fetch(endpoint, options)
 		.then((res) => res.json())
-		.then((res) => res.data);
+		.then((res) => res.data)
+		.then(({ id, attributes }) => ({
+			id,
+			...attributes,
+			runner: { id: attributes.runner.data.id, ...attributes.runner.data.attributes },
+			parcours: { id: attributes.parcours.data.id, ...attributes.parcours.data.attributes }
+		}));
 };
 
 export const createOrUpdateRunner = async ({ runner, attachments }: {
@@ -83,4 +94,29 @@ export const createOrUpdateRunner = async ({ runner, attachments }: {
 			return json.data;
 		})
 		.then(({ id, attributes }) => ({ id, ...attributes }));
+};
+
+export const getRun = async (id: string | number): Promise<App.Run> => {
+	const endpoint = new URL('/api/runs/' + id, STRAPI_URL);
+	endpoint.searchParams.append('populate[0]', 'race');
+	endpoint.searchParams.append('populate[1]', 'race.parcours');
+	endpoint.searchParams.append('populate[2]', 'runner');
+	return fetch(endpoint.toString())
+		.then((res) => res.json())
+		.then((res) => ({
+			id: res.data.id, 
+			...res.data.attributes,
+			race: {
+				id: res.data.attributes.race.data.id,
+				...res.data.attributes.race.data.attributes,
+				parcours: {
+					id: res.data.attributes.race.data.attributes.parcours.data.id,
+					...res.data.attributes.race.data.attributes.parcours.data.attributes,
+				}
+			},
+			runner: {
+				id: res.data.attributes.runner.data.id,
+				...res.data.attributes.runner.data.attributes,
+			}
+		} as App.Run));
 };

@@ -18,6 +18,7 @@
 	}
   input[type=checkbox] {
     margin-top: 8px !important;
+    box-shadow: none;
   }
 	label.selected {
 		background-color: lightgray;
