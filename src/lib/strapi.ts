@@ -50,7 +50,7 @@ export const findNextPublicRace = async (): Promise<App.Race | null> => {
 		});
 };
 
-export const registerRun = async (run: App.Run) => {
+export const registerRun = async (run: App.Run): Promise<App.Run> => {
 	const endpoint = new URL('/api/runs', STRAPI_URL);
 	const data =  { ...run, runner: run.runner.id };
 	const options = {
@@ -66,8 +66,6 @@ export const registerRun = async (run: App.Run) => {
 		.then(({ id, attributes }) => ({
 			id,
 			...attributes,
-			runner: { id: attributes.runner.data.id, ...attributes.runner.data.attributes },
-			parcours: { id: attributes.parcours.data.id, ...attributes.parcours.data.attributes }
 		}));
 };
 

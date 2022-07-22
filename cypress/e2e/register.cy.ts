@@ -89,7 +89,7 @@ describe('Enregistrer un participant', () => {
     it('de plus de 16 ans', () => {
       Object.entries(runner).forEach(([key, value]) => cy.get(`input[name="runner.${key}"]`).clear().type(value));
       cy.get('input[name="files.certificates').selectFile('cypress/e2e/assets/certificat_medical.pdf')
-        .get('p[data-cy="Je suis mineur et..."').click()
+        .get('[data-cy="Je suis mineur et..."').click()
         .get('input[name="runner.child"][value="false"]').click()
         .get('input[name="files.authorizations"').selectFile('cypress/e2e/assets/autorisation_parentale.jpg')
         .get('form').submit()
@@ -104,7 +104,7 @@ describe('Enregistrer un participant', () => {
     it('de moins de 16 ans', () => {
       Object.entries(runner).forEach(([key, value]) => cy.get(`input[name="runner.${key}"]`).clear().type(value));
       cy.get('input[name="files.certificates').selectFile('cypress/e2e/assets/certificat_medical.pdf')
-        .get('p[data-cy="Je suis mineur et..."').click()
+        .get('[data-cy="Je suis mineur et..."').click()
         .get('input[name="runner.child"][value="true"]').click()
         .get('p.alert').should('have.text', 'Les mineur-e-s de moins de 16 ans doivent impérativement être accompagné-e-s d\'un adulte pendant toute la course !')
         .get('form').submit()

@@ -56,11 +56,11 @@ describe('Strapi API', () => {
     const data = { id: 1, attributes: { ...run, runner: 1 }};
 
     beforeEach(() => {
-      cy.intercept('POST', '/api/runs', { data }).as('createRun');
+      cy.intercept('POST', '/api/runs*', { data }).as('createRun');
     });
     it('should register a new run to a given race', () => {
       cy.wrap(registerRun(run)).then(subject => {
-        expect(subject).to.deep.equal(data);
+        expect(subject).to.deep.equal({ id: 1, ...data.attributes });
       });
       cy.wait('@createRun')
         .its('request.body').should('deep.equal', { data: { ...run, runner: 1 } });
