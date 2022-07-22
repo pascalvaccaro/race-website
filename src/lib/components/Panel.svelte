@@ -1,16 +1,20 @@
 <script lang="ts">
   export let title: string;
   export let value: boolean;
+
+  const isBool = typeof value === 'boolean';
 </script>
 
-<div>
-  <p data-cy={title} on:click={() => value = !value}>
-    {title}
-    <span>
-      {@html (value ? '&#9660' : '&#9658')}
-    </span>
+<div data-cy={title}>
+  <p on:click={isBool ? () => (value = !value) : undefined}>
+    <slot name="title">{title}</slot>
+    <slot name="action">
+      <span>
+        {@html (value ? '&#9660' : '&#9658')}
+      </span>
+    </slot>
   </p>
-  {#if value}
+  {#if value || !isBool}
     <slot />
   {/if}
 </div>
