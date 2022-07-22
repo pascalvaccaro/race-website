@@ -4,8 +4,6 @@
 
 <style>
   h2 {
-    margin: 0 16px;
-    padding: 8px 16px;
     border-radius: 4px;
     box-shadow: 2px 2px 4px gray;
     text-align: center;

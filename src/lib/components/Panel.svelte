@@ -11,33 +11,35 @@
     </span>
   </p>
   {#if value}
-    <style>
-      * {
-        margin-bottom: 8px !important;
-      }
-    </style>
     <slot />
   {/if}
 </div>
 
 <style>
   div {
-    width: calc(100% - 32px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     border-radius: 4px;
     padding: 8px 16px;
     background-color: rgba(255, 255, 255, 0.65);
-    margin-bottom: 8px;
+    margin: 0.25rem 0;
+    width: calc(100% - 32px);
   }
   div > p {
+    cursor: pointer;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     padding: 8px 4px;
-    margin: 0;
     align-items: center;
     flex-shrink: 1;
+    width: 100%;
+  }
+  div > p > span {
+    margin-left: 1rem;
+  }
+  p {
+    margin: 0;
   }
 </style>

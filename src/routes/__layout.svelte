@@ -1,4 +1,5 @@
 <div class="wrapper">
+	<slot name="header" />
 	<slot />
 </div>
 
@@ -19,16 +20,9 @@
     display: flex;
 		flex-direction: column;
     align-items: center;
-		justify-content: space-around;
+		justify-content: center;
+		padding: 8px 16px;
   }
-	.wrapper > h2 {
-			margin: 0 16px;
-			padding: 8px 16px;
-			border-radius: 4px;
-			box-shadow: 2px 2px 4px gray;
-			text-align: center;
-			background-color: rgba(255, 255, 255, 0.65)
-		}
   :global(.alert) {
     padding: 4px 8px;
     color: rgba(230, 40, 40);
@@ -64,5 +58,8 @@
 		border: 0;
 		border-radius: 4px;
 		outline: none;
+	}
+	:global(button) {
+		cursor: pointer;
 	}
 </style>

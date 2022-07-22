@@ -49,24 +49,26 @@
 	{/if}
 
 	<Panel title="Je suis mineur et..." bind:value={$run.runner.minor}>
-		<div class="two-cols">
-			<RadioInput name="runner.child" value={false} bind:group={$run.runner.child}>
-				j'ai entre 16 et 18 ans
-			</RadioInput>
-			<RadioInput name="runner.child" value={true} bind:group={$run.runner.child}>
-				j'ai moins de 16 ans
-			</RadioInput>
+		<div class="minor">
+			<div class="two-cols">
+				<RadioInput name="runner.child" value={false} bind:group={$run.runner.child}>
+					j'ai entre 16 et 18 ans
+				</RadioInput>
+				<RadioInput name="runner.child" value={true} bind:group={$run.runner.child}>
+					j'ai moins de 16 ans
+				</RadioInput>
+			</div>
+			{#if $needs.authorization}
+				<label for="authorization">
+					Mon autorisation parentale
+					<FileInput name="files.authorizations" required />
+				</label>
+			{:else if $needs.parents}
+				<p class="alert">
+					Les mineur-e-s de moins de 16 ans doivent impérativement être accompagné-e-s d'un adulte pendant toute la course !
+				</p>
+			{/if}
 		</div>
-		{#if $needs.authorization}
-			<label for="authorization">
-				Mon autorisation parentale
-				<FileInput name="files.authorizations" required />
-			</label>
-		{:else if $needs.parents}
-			<p class="alert">
-				Les mineur-e-s de moins de 16 ans doivent impérativement être accompagné-e-s d'un adulte pendant toute la course !
-			</p>
-		{/if}
 	</Panel>
 
 	<input type="hidden" name="run.race" value={raceId} />
@@ -76,11 +78,13 @@
 
 <style>
 	form {
-		min-height: 520px;
-		margin: 16px;
+		min-height: 420px;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-evenly;
+	}
+	form > * {
+		margin: 1rem 0;
 	}
 	label, input {
 		padding: 8px 16px;
@@ -102,5 +106,13 @@
     background-color: blue;
     color: white;
     cursor: pointer;
+	}
+	div.minor > * {
+		margin-bottom: 0.5rem;
+	}
+	div.minor {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 	}
 </style>

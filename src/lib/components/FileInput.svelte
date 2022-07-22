@@ -5,7 +5,7 @@
 </script>
 
 <button on:click={() => fileInput.click()}>
-	<slot>Upload</slot>
+	<slot>Ajouter</slot>
 	<input {name} {required} type="file" bind:this={fileInput} />
 </button>
 
@@ -14,12 +14,12 @@
     display: flex;
     align-items: center;
     outline: none;
-    border: 1px dashed gray;
-    border-radius: 0.8rem;
+    background-color: lightgray;
+    border-radius: 4px;
     padding: 0.5rem 1rem;
     margin: 0 0.5rem;
-    font-weight: bold;
     box-shadow: none;
+    text-transform: uppercase;
   }
   button input {
     width: 1px;

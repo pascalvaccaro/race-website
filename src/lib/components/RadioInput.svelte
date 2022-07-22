@@ -11,6 +11,7 @@
 
 <style>
   label.box {
+    cursor: pointer;
 		background-color: white;
     justify-content: center;
 		flex-direction: column;
