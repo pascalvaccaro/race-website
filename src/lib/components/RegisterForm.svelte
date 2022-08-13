@@ -7,7 +7,8 @@
 	import Panel from './Panel.svelte';
 
   export let raceId: number;
-  export let parent: number;
+  export let parent: App.Runner;
+	const pronoun = parent ? 'Il/elle' : 'Je';
   
   async function onChangeEmail(event: any) {
 		const email = event.target.value;
@@ -18,7 +19,7 @@
 
 <form method="post">
   {#if parent}
-	  <input type="hidden" name="runner.email" value={parent.email} />
+	  <input type="hidden" name="runner.parent" value={parent.id} />
   {:else}
 	  <input placeholder="Adresse email" type="email" name="runner.email" on:change={onChangeEmail} required />
   {/if}
@@ -34,34 +35,34 @@
 
   <div class="two-cols">
     <CheckInput name="run.walking" bind:value={$run.walking}>
-      <span>Je marche <br/> <small>(et promets de ne pas courir !)</small></span>
+      <span>{pronoun} marche <br/> <small>(et promet{parent ? '' : 's'} de ne pas courir !)</small></span>
 		</CheckInput>
     <CheckInput name="run.copyright" bind:value={$run.copyright}>
-      Je donne mon droit à l'image
+      {pronoun} donne {parent ? 's' : 'm'}on droit à l'image
 		</CheckInput>
   </div>
 
 	{#if $needs.certificate}
 		<label for="certificate">
-			Mon certificat médical datant d'il y a moins d'un an
-			<FileInput name="files.certificates" required />
+			{parent ? 'S' : 'M'}on certificat médical datant d'il y a moins d'un an
+			<FileInput name="files.certificate" required />
 		</label>
 	{/if}
 
-	<Panel title="Je suis mineur et..." bind:value={$run.runner.minor}>
+	<Panel title={`${parent ? 'Il/elle est' : 'Je suis'} mineur-e et...`} bind:value={$run.runner.minor}>
 		<div class="minor">
 			<div class="two-cols">
 				<RadioInput name="runner.child" value={false} bind:group={$run.runner.child}>
-					j'ai entre 16 et 18 ans
+					{parent ? 'a' : 'ai'} entre 16 et 18 ans
 				</RadioInput>
 				<RadioInput name="runner.child" value={true} bind:group={$run.runner.child}>
-					j'ai moins de 16 ans
+					{parent ? 'a' : 'ai'} moins de 16 ans
 				</RadioInput>
 			</div>
 			{#if $needs.authorization}
 				<label for="authorization">
-					Mon autorisation parentale
-					<FileInput name="files.authorizations" required />
+					{parent ? 'Son' : 'Mon'} autorisation parentale
+					<FileInput name="files.authorization" required />
 				</label>
 			{:else if $needs.parents}
 				<p class="alert">

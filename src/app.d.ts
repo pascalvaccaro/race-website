@@ -11,9 +11,12 @@ declare namespace App {
 		firstname: string;
 		lastname: string;
 		email: string;
-		certificates: Array<{ __component: string; expiration?: Date; }>;
+		certificate: { __component: string; valid: boolean; expiration?: Date | null; };
+		authorization: { __component: string; };
 		minor: boolean;
 		child: boolean;
+		parent: Runner | number;
+		children: Runner[] | number[];
 	}
 	interface Run {
 		id: number;

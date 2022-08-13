@@ -18,13 +18,19 @@
 </script>
 
 <Disclaimer>
-  Merci {runner.firstname || run.runner.firstname} ! Ton inscription est confirmée pour la course du {startTime} au parc {run.race.park.name}
+  Merci {runner.firstname} !
+  {#if runner.id === run.runner.id}
+    Ton inscription
+  {:else}
+    L'inscription de {run.runner.firstname}
+  {/if}
+  est confirmée pour la course du {startTime} au parc {run.race.park.name}
 </Disclaimer>
 
 <div class="options">
   <Panel title="Je souhaite inscrire d'autres personnes..." bind:value={panels.registerOthers}>
     <Panel title="En l'inscrivant moi-même..." bind:value={panels.registerChild}>
-      <Form raceId={run.race.id} parent={runner || run.runner} />
+      <Form raceId={run.race.id} parent={runner || run.runner} pronoun="Il/elle" />
     </Panel>
     <Panel title="En partageant la course sur les réseaux sociaux..." bind:value={panels.share}>
       TODO
