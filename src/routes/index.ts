@@ -16,9 +16,11 @@ export async function GET() {
 export const POST: RequestHandler = async ({ request }) => {
 	const data = await request.formData();
 
-	const run = {} as App.Run;
+	const run = {
+		chrono: '00:00:00.000',
+	} as App.Run;
 	const runner = {} as App.Runner;
-	const attachments = [] as FormDataEntryValue[];
+	const attachments = [] as File[];
 
 	data.forEach((value, key) => {
 		const [modelName, fieldName] = key.split('.');
@@ -47,8 +49,8 @@ export const POST: RequestHandler = async ({ request }) => {
 					case 'child':
 						runner[fieldName] = boolValue;
 						break;
-					case 'firstName':
-					case 'lastName':
+					case 'firstname':
+					case 'lastname':
 					case 'email':
 						runner[fieldName] = strValue;
 						break;
@@ -63,7 +65,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				switch (fieldName) {
 					case 'certificates':
 						// case 'authorizations':
-						attachments.push(value);
+						attachments.push(value as File);
 						runner[fieldName] = runner[fieldName] || [];
 						runner[fieldName].push({
 							__component: `medical.${fieldName.slice(0, -1)}`,
@@ -77,8 +79,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
   try {
     run.runner = await createOrUpdateRunner({ runner, attachments });
-  } catch (e) {
-    // nothing to do
+  } catch (e: any) {
+    console.error(e.message || e);
+    console.error(e.stack);
   }
   try {
     const { id } = await registerRun(run);

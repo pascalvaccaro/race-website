@@ -25,8 +25,8 @@
 
 	<SmartInput name="runnerId">
 		<div class="two-cols">
-			<input placeholder="Prénom" required name="runner.firstName" bind:value={$run.runner.firstName} />
-			<input placeholder="Nom de famille" required name="runner.lastName" bind:value={$run.runner.lastName} />
+			<input placeholder="Prénom" required name="runner.firstname" bind:value={$run.runner.firstname} />
+			<input placeholder="Nom de famille" required name="runner.lastname" bind:value={$run.runner.lastname} />
 		</div>
 		<input type="hidden" name="run.runner" bind:value={$run.runner.id} />
 		<input type="hidden" name="runner.id" bind:value={$run.runner.id} />

@@ -13,7 +13,7 @@
 {#if $hasOptions}
 	<select {name} on:change={onChange}>
 		{#each $runners as entry}
-			<option value={entry.id}>{entry.firstName} {entry.lastName}</option>
+			<option value={entry.id}>{entry.firstname} {entry.lastname}</option>
 		{/each}
 	</select>
 {/if}

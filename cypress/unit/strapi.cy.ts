@@ -5,7 +5,7 @@ import { findRunnerByEmail, findNextPublicRace, registerRun, createOrUpdateRunne
 describe('Strapi API', () => {
   describe('findRunnerByEmail', () => {
     const email = 'testuser@email.com';
-    const user = { email , firstName: 'Test', lastName: 'User' };
+    const user = { email , firstname: 'Test', lastname: 'User' };
     const data = [{ id: 1, attributes: user }];
     
     beforeEach(() => {
@@ -25,10 +25,10 @@ describe('Strapi API', () => {
   
   describe('findNextPublicRace', () => {
     const today = new Date();
-    const parcours = { id: 1, name: 'Parcours', distance: 5, laps: 2 }
+    const park = { id: 1, name: 'park', distance: 5, laps: 2 }
     const race = { 
-      startDate: today.toISOString(), startTime: '10:00', parcours: 
-      { data: { attributes: parcours }}
+      startDate: today.toISOString(), startTime: '10:00', park: 
+      { data: { attributes: park }}
     };
     const data = [{ id: 1, attributes: race }];
 
@@ -41,7 +41,7 @@ describe('Strapi API', () => {
 
     it('should find the next public race', () => {
       cy.wrap(findNextPublicRace()).then(subject => {
-        expect(subject).to.deep.equal({ id: 1, ...race, parcours });
+        expect(subject).to.deep.equal({ id: 1, ...race, park });
       });
     });
   });
@@ -71,8 +71,8 @@ describe('Strapi API', () => {
     const runner = {
       minor: false,
       child: false,
-      firstName: 'Test',
-      lastName: 'User',
+      firstname: 'Test',
+      lastname: 'User',
       email: 'testuser@email.com',
     };
     const data = { id: 1, attributes: runner };

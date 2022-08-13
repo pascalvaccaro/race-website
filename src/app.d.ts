@@ -8,15 +8,16 @@ declare namespace App {
 	// interface Session {}
 	interface Runner {
 		id: number;
-		firstName: string;
-		lastName: string;
+		firstname: string;
+		lastname: string;
 		email: string;
 		certificates: Array<{ __component: string; expiration?: Date; }>;
-		attestations: Array<{ __component: string; valid?: boolean; }>;
 		minor: boolean;
 		child: boolean;
 	}
 	interface Run {
+		id: number;
+		chrono: string;
 		walking: boolean;
 		copyright: boolean;
 		runner: Runner;
@@ -26,7 +27,7 @@ declare namespace App {
 		id: number;
 		startDate: Date;
 		startTime: string;
-		parcours: {
+		park: {
 			name: string;
 			gallery: unknown[];
 		}

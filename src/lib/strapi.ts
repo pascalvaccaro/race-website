@@ -2,9 +2,10 @@ import { FormData } from 'formdata-node';
 
 export const STRAPI_URL = 'http://localhost:1337';
 
-type StrapiResponse<T = Record<string, { data?: StrapiResponse } | string | number | boolean>> = {
-	id: number;
-	attributes: T;
+async function handleStrapiResponse(res: Response) {
+	const json = await res.json();
+	if (json.error) throw new Error(json.error.message);
+	return json.data;
 }
 
 export const findRunnerByEmail = async (email: string): Promise<Array<App.Runner>> => {
@@ -12,9 +13,9 @@ export const findRunnerByEmail = async (email: string): Promise<Array<App.Runner
 	endpoint.searchParams.append('filters[email][$eq]', email);
 	endpoint.searchParams.append('populate', 'certificates,attestations');
 	return fetch(endpoint.toString())
-		.then((res) => res.json())
-		.then((res) =>
-			res.data.map(({ id, attributes }: { id: number; attributes: Omit<App.Runner, 'id'> }) => ({
+		.then(handleStrapiResponse)
+		.then((data) =>
+			data.map(({ id, attributes }: { id: number; attributes: Omit<App.Runner, 'id'> }) => ({
 				id,
 				...attributes
 			}))
@@ -25,19 +26,17 @@ export const findNextPublicRace = async (): Promise<App.Race | null> => {
 	const endpoint = new URL('/api/races', STRAPI_URL);
 	endpoint.searchParams.append('filters[startDate][$gte]', new Date().toISOString().split('T')[0]);
 	endpoint.searchParams.append('sort', 'startDate:asc');
-	endpoint.searchParams.append('populate', 'parcours');
+	endpoint.searchParams.append('populate', 'park');
 
 	return fetch(endpoint.toString())
-		.then((res) => res.json())
-		.then((res) => {
-			const {
-				data: [first]
-			} = res;
+		.then(handleStrapiResponse)
+		.then((data) => {
+			const [first] = data;
 			if (!first) return null;
 			const { id, attributes } = first;
 			const {
-				parcours: {
-					data: { attributes: parcours }
+				park: {
+					data: { attributes: park }
 				},
 				...race
 			} = attributes;
@@ -45,7 +44,7 @@ export const findNextPublicRace = async (): Promise<App.Race | null> => {
 			return {
 				id,
 				...race,
-				parcours
+				park
 			} as App.Race;
 		});
 };
@@ -61,8 +60,7 @@ export const registerRun = async (run: App.Run): Promise<App.Run> => {
 		method: 'POST'
 	};
 	return fetch(endpoint, options)
-		.then((res) => res.json())
-		.then((res) => res.data)
+		.then(handleStrapiResponse)
 		.then(({ id, attributes }) => ({
 			id,
 			...attributes,
@@ -71,50 +69,50 @@ export const registerRun = async (run: App.Run): Promise<App.Run> => {
 
 export const createOrUpdateRunner = async ({ runner, attachments }: {
 	runner: Partial<App.Runner>,
-	attachments?: FormDataEntryValue[] 
+	attachments?: File[] 
 }): Promise<App.Runner> => {
 	const exists = Boolean(runner && 'id' in runner && typeof runner.id === 'number');
 	const endpoint = new URL('/api/runners' + (exists ? `/${runner.id}` : ''), STRAPI_URL);
 	const body = new FormData();
 	body.append('data', JSON.stringify(runner));
 	if (attachments && attachments.length) 
-		body.append('files.attachment', attachments);
+		attachments.forEach(
+			(attachment, i) => body.append(`files.attachment[${i}]`, attachment, attachment.name)
+		);
 
 	const options = {
 		method: exists ? 'PUT' : 'POST',
-		body,
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ data: runner }),
 	};
 	return fetch(endpoint, options as any)
-		.then(async (res) => {
-			if (!res.ok) throw new Error(await res.text());
-			const json = await res.json();
-			if (json.error) throw json.error;
-			return json.data;
-		})
+		.then(handleStrapiResponse)
 		.then(({ id, attributes }) => ({ id, ...attributes }));
 };
 
 export const getRun = async (id: string | number): Promise<App.Run> => {
 	const endpoint = new URL('/api/runs/' + id, STRAPI_URL);
 	endpoint.searchParams.append('populate[0]', 'race');
-	endpoint.searchParams.append('populate[1]', 'race.parcours');
+	endpoint.searchParams.append('populate[1]', 'race.park');
 	endpoint.searchParams.append('populate[2]', 'runner');
 	return fetch(endpoint.toString())
-		.then((res) => res.json())
-		.then((res) => ({
-			id: res.data.id, 
-			...res.data.attributes,
+		.then(handleStrapiResponse)
+		.then((data) => ({
+			id: data.id, 
+			...data.attributes,
 			race: {
-				id: res.data.attributes.race.data.id,
-				...res.data.attributes.race.data.attributes,
-				parcours: {
-					id: res.data.attributes.race.data.attributes.parcours.data.id,
-					...res.data.attributes.race.data.attributes.parcours.data.attributes,
+				id: data.attributes.race.data.id,
+				...data.attributes.race.data.attributes,
+				park: {
+					id: data.attributes.race.data.attributes.park.data.id,
+					...data.attributes.race.data.attributes.park.data.attributes,
 				}
 			},
 			runner: {
-				id: res.data.attributes.runner.data.id,
-				...res.data.attributes.runner.data.attributes,
+				id: data.attributes.runner.data.id,
+				...data.attributes.runner.data.attributes,
 			}
 		} as App.Run));
 };

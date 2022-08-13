@@ -8,8 +8,8 @@ describe('Enregistrer un participant', () => {
   let race: App.Race;
   const runner = {
     email: 'testuser@email.com',
-    firstName: 'Test',
-    lastName: 'User',
+    firstname: 'Test',
+    lastname: 'User',
   };
   before(async () => {
     race = await findNextPublicRace() as App.Race;
@@ -28,7 +28,7 @@ describe('Enregistrer un participant', () => {
         expect(request.headers).to.include({
           'content-type': 'application/x-www-form-urlencoded'
         });
-        expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstName=Test&runner.lastName=User&run.runner=&runner.id=&run.copyright=on&files.certificates=certificat_medical.pdf&run.race=${race.id}`);
+        expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstname=Test&runner.lastname=User&run.runner=&runner.id=&run.copyright=on&files.certificates=certificat_medical.pdf&run.race=${race.id}`);
       });
     });
     
@@ -41,7 +41,7 @@ describe('Enregistrer un participant', () => {
         expect(request.headers).to.include({
           'content-type': 'application/x-www-form-urlencoded'
         });
-        expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstName=Test&runner.lastName=User&run.runner=&runner.id=&run.walking=on&run.copyright=on&run.race=${race.id}`);
+        expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstname=Test&runner.lastname=User&run.runner=&runner.id=&run.walking=on&run.copyright=on&run.race=${race.id}`);
       });
   });
 
@@ -53,15 +53,15 @@ describe('Enregistrer un participant', () => {
 
     it('préremplit le formulaire avec ses informations', () => {
       cy.get('input[name="runner.email"]').clear().type(runner.email).blur()
-        .get('input[name="runner.firstName"').should('have.value', runner.firstName)
-        .get('input[name="runner.lastName"').should('have.value', runner.lastName)
+        .get('input[name="runner.firstname"').should('have.value', runner.firstname)
+        .get('input[name="runner.lastname"').should('have.value', runner.lastname)
         .get('input[name="files.certificates').selectFile('cypress/e2e/assets/certificat_medical.pdf')
         .get('button[type="submit"').click()
         .wait('@submitForm').should(({ request }) => {
           expect(request.headers).to.include({
           'content-type': 'application/x-www-form-urlencoded'
           });
-          expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstName=Test&runner.lastName=User&run.runner=1&runner.id=1&run.copyright=on&files.certificates=certificat_medical.pdf&run.race=${race.id}`);
+          expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstname=Test&runner.lastname=User&run.runner=1&runner.id=1&run.copyright=on&files.certificates=certificat_medical.pdf&run.race=${race.id}`);
         });
     });
   });
@@ -69,8 +69,8 @@ describe('Enregistrer un participant', () => {
   describe('avec plusieurs coureurs possibles', () => {
     const second = {
       email: 'seconduser@email.com',
-      firstName: 'Second',
-      lastName: 'Runner',
+      firstname: 'Second',
+      lastname: 'Runner',
     };
     before(() => {
       const data = [{ id: 1, attributes: runner }, { id: 2, attributes: second }];
@@ -80,8 +80,8 @@ describe('Enregistrer un participant', () => {
     it('présente une liste de sélection', () => {
       cy.get('input[name="runner.email"]').clear().type(runner.email).blur()
         .get('select[name="runnerId"]')
-        .should('contain', runner.firstName + ' ' + runner.lastName)
-        .should('contain', second.firstName + ' ' + second.lastName);
+        .should('contain', runner.firstname + ' ' + runner.lastname)
+        .should('contain', second.firstname + ' ' + second.lastname);
     });
   });
 
@@ -97,7 +97,7 @@ describe('Enregistrer un participant', () => {
           expect(request.headers).to.include({
             'content-type': 'application/x-www-form-urlencoded'
           });
-          expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstName=Test&runner.lastName=User&run.runner=&runner.id=&run.copyright=on&files.certificates=certificat_medical.pdf&runner.child=false&files.authorizations=autorisation_parentale.jpg&run.race=${race.id}`);
+          expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstname=Test&runner.lastname=User&run.runner=&runner.id=&run.copyright=on&files.certificates=certificat_medical.pdf&runner.child=false&files.authorizations=autorisation_parentale.jpg&run.race=${race.id}`);
         });
     });
 
@@ -112,7 +112,7 @@ describe('Enregistrer un participant', () => {
           expect(request.headers).to.include({
             'content-type': 'application/x-www-form-urlencoded'
           });
-          expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstName=Test&runner.lastName=User&run.runner=&runner.id=&run.copyright=on&files.certificates=certificat_medical.pdf&runner.child=true&run.race=${race.id}`);
+          expect(request.body).to.equal(`runner.email=testuser%40email.com&runner.firstname=Test&runner.lastname=User&run.runner=&runner.id=&run.copyright=on&files.certificates=certificat_medical.pdf&runner.child=true&run.race=${race.id}`);
         });
     });
   });

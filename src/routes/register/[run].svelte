@@ -18,7 +18,7 @@
 </script>
 
 <Disclaimer>
-  Merci {runner.firstName || run.runner.firstName} ! Ton inscription est confirmée pour la course du {startTime} au parc {run.race.parcours.name}
+  Merci {runner.firstname || run.runner.firstname} ! Ton inscription est confirmée pour la course du {startTime} au parc {run.race.park.name}
 </Disclaimer>
 
 <div class="options">

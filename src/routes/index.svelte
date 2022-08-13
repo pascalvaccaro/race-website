@@ -8,7 +8,7 @@
 </script>
 
 <Disclaimer>
-	La prochaine course a lieu le {startTime} au parc {race.parcours.name}
+	La prochaine course a lieu le {startTime} au parc {race.park.name}
 </Disclaimer>
 
 <Form raceId={race.id} />

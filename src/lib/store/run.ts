@@ -13,7 +13,7 @@ const defaultRun = {
 export const run = writable<App.Run>(defaultRun);
 
 export const setRunner = async (runner: Partial<App.Runner>) => {
-	if (runner.email && (!runner.firstName || !runner.lastName)) {
+	if (runner.email && (!runner.firstname || !runner.lastname)) {
 		const entries = await findRunnerByEmail(runner.email);
 		if (entries.length === 1) runner =  entries[0];
 		else runners.set(entries);
