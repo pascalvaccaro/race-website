@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { findNextPublicRace, registerRun, createOrUpdateRunner } from '$lib/strapi';
+import { findNextPublicRace, registerRun } from '$lib/strapi';
 import { extractRegisterFormData } from '$lib/utils/form';
 
 export async function GET() {
@@ -17,7 +17,7 @@ export async function GET() {
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const data = await request.formData();
-		const run = await extractRegisterFormData(data as any);
+		const run = await extractRegisterFormData(data);
     const { id } = await registerRun(run);
     
     return {

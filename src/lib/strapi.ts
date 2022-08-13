@@ -1,3 +1,4 @@
+import FormData from 'form-data';
 import { stringify } from 'qs';
 
 export const STRAPI_URL = 'http://localhost:1337';
@@ -50,13 +51,14 @@ const handleStrapiResponse = async <T>(res: Response): Promise<T> => {
 };
 
 const authFetch = async <T = unknown>(
-	url: RequestInfo | URL,
-	options?: RequestInit
+	url: Parameters<typeof fetch>[0],
+	options?: Parameters<typeof fetch>[1]
 ): Promise<T> => {
 	if (!options || typeof options !== 'object') options = {};
 	options.headers = {
+		'Content-Type': 'application/json',
+		Authorization: `bearer ${STRAPI_API_TOKEN}`,
 		...(options.headers ?? {}),
-		Authorization: `bearer ${STRAPI_API_TOKEN}`
 	};
 	return fetch(url.toString(), options).then<T>(handleStrapiResponse);
 };
@@ -65,7 +67,7 @@ export const findRunnerByEmail = async (email: string) => {
 	const endpoint = new URL('/api/runners', STRAPI_URL);
 	endpoint.search = stringify({
 		filters: { email },
-		populate: ['certificate']
+		populate: ['attachments', 'attachments.file']
 	});
 	return authFetch<App.Runner[]>(endpoint);
 };
@@ -73,7 +75,7 @@ export const findRunnerByEmail = async (email: string) => {
 export const findNextPublicRace = async () => {
 	const endpoint = new URL('/api/races', STRAPI_URL);
 	endpoint.search = stringify({
-		filters: { startDate: { $gte: new Date().toISOString() }},
+		filters: { startDate: { $gte: new Date().toISOString().split('T')[0] }},
 		sort: 'startDate:asc',
 		populate: ['park']
 	});
@@ -88,11 +90,8 @@ export const registerRun = async (run: App.Run) => {
 	});
 	const data = { ...run, runner: run.runner.id };
 	const options = {
-		headers: {
-			'Content-Type': 'application/json'
-		},
+		method: 'POST',
 		body: JSON.stringify({ data }),
-		method: 'POST'
 	};
 	return authFetch<App.Run>(endpoint, options);
 };
@@ -102,23 +101,45 @@ export const createOrUpdateRunner = async ({
 	attachments
 }: {
 	runner: Partial<App.Runner>;
-	attachments?: string[];
+	attachments: File[];
 }) => {
 	const exists = Boolean(runner && 'id' in runner && typeof runner.id === 'number');
 	const endpoint = new URL('/api/runners' + (exists ? `/${runner.id}` : ''), STRAPI_URL);
-	const body = new URLSearchParams();
+	endpoint.search = stringify({
+		populate: ['attachments']
+	})
+	const body = new FormData();
+	await Promise.all(attachments.map(async (file, the_index) => {
+		const buffer = await file.arrayBuffer();
+		body.append(`files.attachments[${the_index}].file`, Buffer.from(buffer), file.name);
+	}));
 	body.append('data', JSON.stringify(runner));
-	if (attachments && attachments.length)
-		body.append(`files.file`, attachments[0] as string)
-
+	
 	const options = {
+		protocol: endpoint.protocol as 'http:',
+		hostname: endpoint.hostname,
+		port: endpoint.port,
+		path: endpoint.pathname + endpoint.search,
 		method: exists ? 'PUT' : 'POST',
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body,
+		headers: { Authorization: `bearer ${STRAPI_API_TOKEN}` },
 	};
-	return authFetch<App.Runner>(endpoint, options as RequestInit);
+	return new Promise<App.Runner>((resolve, reject) => body.submit(options, (err, res) => {
+		if (err) return reject(err);
+		const chunks = [] as string[];
+		res.on('data', (chunk) => chunks.push(chunk));
+		res.on('end', () => {
+			try {
+				const str = chunks.join('');
+				const obj = JSON.parse(str);
+				const result = parseStrapiData<App.Runner>(obj.data);
+				resolve(result);
+			} catch (err) {
+				console.error(err);
+				reject(err);
+			}
+		});
+		res.on('error', reject);
+	}));
 };
 
 export const getRun = async (id: string | number) => {

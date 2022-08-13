@@ -1,15 +1,13 @@
-import { createOrUpdateRunner } from "$lib/strapi";
-import { writeFile } from 'node:fs/promises';
+import { createOrUpdateRunner } from '$lib/strapi';
 
 export const extractRegisterFormData = async (data: FormData) => {
-  const run = {
-		chrono: '00:00:00.000',
+	const run = {
+		chrono: '00:00:00.000'
 	} as App.Run;
 	const runner = {} as App.Runner;
-	const attachments = [] as string[];
-	console.log(Object.entries(data));
+	const attachments = [] as File[];
 
-	data.forEach((value, key, parent) => {
+	data.forEach((value, key) => {
 		const [modelName, fieldName] = key.split('.');
 		const strValue = value.toString();
 		if (!strValue) return;
@@ -48,41 +46,34 @@ export const extractRegisterFormData = async (data: FormData) => {
 						break;
 					case 'parent':
 						runner.parent = nbValue;
-						run.runner = run.runner ?? {}
+						run.runner = run.runner ?? {};
 						run.runner.parent = nbValue;
 						break;
 				}
 				break;
 			case 'files':
 				switch (fieldName) {
-					case 'authorization':
-						attachments.push(value as string);
-						runner[fieldName] = runner[fieldName] || {};
-						runner[fieldName] = {
-							__component: `attachments.${fieldName}`,
-						};
-						break;
 					case 'certificate':
-						attachments.push(value as string);
-						runner[fieldName] = runner[fieldName] || {} as App.Runner['authorization'];
-						runner[fieldName] = {
-							__component: `attachments.certifificate`,
-							expiration: null,
-							valid: false
-						};
+					case 'authorization': {
+						attachments.push(value as File);
+						runner.attachments = runner.attachments ?? [];
+						runner.attachments.push({
+							__component: `attachments.${fieldName}`,
+							valid: false,
+						});
 						break;
+					}
 				}
 				break;
 		}
 	});
 
-  
-  try {
-    run.runner = await createOrUpdateRunner({ runner, attachments });
-  } catch (e: any) {
-    console.error(e.message || e);
-    console.error(e.stack);
-  }
+	try {
+		run.runner = await createOrUpdateRunner({ runner, attachments });
+	} catch (e: any) {
+		console.error(e.message || e);
+		console.error(e.stack);
+	}
 
-  return run;
+	return run;
 };

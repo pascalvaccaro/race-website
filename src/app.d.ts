@@ -11,8 +11,11 @@ declare namespace App {
 		firstname: string;
 		lastname: string;
 		email: string;
-		certificate: { __component: string; valid: boolean; expiration?: Date | null; };
-		authorization: { __component: string; };
+		attachments: {
+			__component: string;
+			valid: boolean;
+			expiration?: Date | null;
+		}[];
 		minor: boolean;
 		child: boolean;
 		parent: Runner | number;
@@ -33,6 +36,6 @@ declare namespace App {
 		park: {
 			name: string;
 			gallery: unknown[];
-		}
+		};
 	}
 }

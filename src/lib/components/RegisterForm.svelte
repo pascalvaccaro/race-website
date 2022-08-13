@@ -17,7 +17,7 @@
 	}
 </script>
 
-<form method="post">
+<form method="post" enctype="multipart/form-data">
   {#if parent}
 	  <input type="hidden" name="runner.parent" value={parent.id} />
   {:else}
