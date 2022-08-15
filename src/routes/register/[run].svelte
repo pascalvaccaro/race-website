@@ -6,7 +6,7 @@
   import Form from '$lib/components/RegisterForm.svelte';
   
   export let run: App.Run;
-  export let runner: App.Runner = run.runner;
+  export let runner: App.Runner = run.runner as App.Runner;
   const panels = {
     registerOthers: false,
     registerChild: false,
@@ -14,7 +14,7 @@
     share: false,
   };
   let registerUrl = 'http://localhost:5173';
-	const startTime = getRaceStartDateTime(run.race);
+	const startTime = getRaceStartDateTime(run.race as App.Race);
 </script>
 
 <Disclaimer>
@@ -30,12 +30,12 @@
 <div class="options">
   <Panel title="Je souhaite inscrire d'autres personnes..." bind:value={panels.registerOthers}>
     <Panel title="En l'inscrivant moi-même..." bind:value={panels.registerChild}>
-      <Form raceId={run.race.id} parent={runner || run.runner} pronoun="Il/elle" />
+      <Form race={run.race} parent={runner || run.runner} />
     </Panel>
     <Panel title="En partageant la course sur les réseaux sociaux..." bind:value={panels.share}>
       TODO
     </Panel>
-    <Panel>
+    <Panel value={true}>
       <p slot="title">
           En envoyant le <a href={registerUrl} target="_blank">lien d'inscription</a>
       </p>

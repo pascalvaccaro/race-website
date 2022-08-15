@@ -6,8 +6,8 @@
 	import RadioInput from './RadioInput.svelte';
 	import Panel from './Panel.svelte';
 
-  export let raceId: number;
-  export let parent: App.Runner;
+  export let race: App.Race;
+  export let parent: App.Runner | null = null;
 	const pronoun = parent ? 'Il/elle' : 'Je';
   
   async function onChangeEmail(event: any) {
@@ -72,7 +72,7 @@
 		</div>
 	</Panel>
 
-	<input type="hidden" name="run.race" value={raceId} />
+	<input type="hidden" name="run.race" value={race.id} />
 
 	<button type="submit">{parent ? 'Confirmer' : "M'inscrire"}</button>
 </form>

@@ -1,8 +1,9 @@
 /// <reference types="cypress" />
 
-import { findNextPublicRace, STRAPI_URL } from '$lib/strapi';
+import { findNextPublicRace } from '$lib/strapi.back';
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
 
 describe('Enregistrer un participant', () => {
   let race: App.Race;

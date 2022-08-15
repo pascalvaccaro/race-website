@@ -1,4 +1,4 @@
-import { createOrUpdateRunner } from '$lib/strapi';
+import { createOrUpdateRunner } from '$lib/strapi.back';
 
 export const extractRegisterFormData = async (data: FormData) => {
 	const run = {
@@ -52,27 +52,22 @@ export const extractRegisterFormData = async (data: FormData) => {
 				}
 				break;
 			case 'files':
-				switch (fieldName) {
-					case 'certificate':
-					case 'authorization': {
-						attachments.push(value as File);
-						runner.attachments = runner.attachments ?? [];
-						runner.attachments.push({
-							__component: `attachments.${fieldName}`,
-							valid: false,
-						});
-						break;
-					}
-				}
+				attachments.push(value as File);
+				runner.attachments = runner.attachments ?? [];
+				runner.attachments.push({
+					__component: `attachments.${fieldName}`,
+					valid: false
+				});
 				break;
 		}
 	});
 
 	try {
-		run.runner = await createOrUpdateRunner({ runner, attachments });
-	} catch (e: any) {
-		console.error(e.message || e);
-		console.error(e.stack);
+		run.runner = await createOrUpdateRunner(runner, attachments);
+	} catch (e: unknown) {
+		const error = e as Error;
+		console.error(error.message || error.toString());
+		console.error(error.stack);
 	}
 
 	return run;

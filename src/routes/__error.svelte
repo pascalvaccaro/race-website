@@ -1,19 +1,19 @@
-<script context="module">
-  /** @type {import('@sveltejs/kit').Load} */
-  export function load({ error, status }) {
-    return {
-      props: {
-        title: `${status}: ${error.message}`,
-        stack: error.stack || '',
-      }
-    };
-  }
+<script context="module" lang="ts">
+  import type { Load } from '@sveltejs/kit';
+
+  const load: Load = ({ error, status }) => ({
+    props: {
+      title: `${status}: ${error?.message ?? error?.toString()}`,
+      stack: error?.stack || '',
+    }
+  });
+  export { load };
 </script>
 
-<script>
+<script lang="ts">
   import { dev } from '$app/env';
-  export let title;
-  export let stack;
+  export let title: string;
+  export let stack: string;
 </script>
 
 <div>

@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { findRunnerByEmail, findNextPublicRace, registerRun, createOrUpdateRunner } from '$lib/strapi';
+import { findRunnerByEmail, findNextPublicRace, registerRun, createOrUpdateRunner } from '$lib/strapi.back';
 
 describe('Strapi API', () => {
   describe('findRunnerByEmail', () => {
@@ -48,8 +48,10 @@ describe('Strapi API', () => {
 
   describe('registerRun', () => {
     const run = {
+      id: 1,
       runner: { id: 1 } as App.Runner,
-      race: 1,
+      race: { id: 1, startDate: new Date(), startTime: '10:00', park: { name: "Borély", gallery: [] } },
+      chrono: '',
       copyright: true,
       walking: false,
     };
@@ -60,7 +62,7 @@ describe('Strapi API', () => {
     });
     it('should register a new run to a given race', () => {
       cy.wrap(registerRun(run)).then(subject => {
-        expect(subject).to.deep.equal({ id: 1, ...data.attributes });
+        expect(subject).to.deep.equal(data.attributes);
       });
       cy.wait('@createRun')
         .its('request.body').should('deep.equal', { data: { ...run, runner: 1 } });
@@ -85,7 +87,7 @@ describe('Strapi API', () => {
     });
 
     it('should create a new runner', async () => {
-      cy.wrap(createOrUpdateRunner({ runner })).then(subject => {
+      cy.wrap(createOrUpdateRunner(runner, [])).then(subject => {
         expect(subject).to.deep.equal({ id: 1, ...runner });
       });
       cy.wait('@createRunner').its('request.body').should('include', JSON.stringify(runner));

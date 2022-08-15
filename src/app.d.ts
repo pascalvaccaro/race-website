@@ -14,7 +14,7 @@ declare namespace App {
 		attachments: {
 			__component: string;
 			valid: boolean;
-			expiration?: Date | null;
+			expiry?: Date | null;
 		}[];
 		minor: boolean;
 		child: boolean;
@@ -27,7 +27,7 @@ declare namespace App {
 		walking: boolean;
 		copyright: boolean;
 		runner: Runner;
-		race: number;
+		race: Race;
 	}
 	interface Race {
 		id: number;

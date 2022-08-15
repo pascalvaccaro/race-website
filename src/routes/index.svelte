@@ -2,7 +2,7 @@
 	import { getRaceStartDateTime } from '$lib/utils/date';
 	import Disclaimer from '$lib/components/Disclaimer.svelte';
 	import Form from '$lib/components/RegisterForm.svelte';
-	
+
 	export let race: App.Race;
 	const startTime = getRaceStartDateTime(race);
 </script>
@@ -11,4 +11,4 @@
 	La prochaine course a lieu le {startTime} au parc {race.park.name}
 </Disclaimer>
 
-<Form raceId={race.id} />
+<Form {race} />

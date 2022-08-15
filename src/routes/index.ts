@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { findNextPublicRace, registerRun } from '$lib/strapi';
+import { findNextPublicRace, registerRun } from '$lib/strapi.back';
 import { extractRegisterFormData } from '$lib/utils/form';
 
 export async function GET() {
@@ -16,20 +16,20 @@ export async function GET() {
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const data = await request.formData();
-		const run = await extractRegisterFormData(data);
-    const { id } = await registerRun(run);
-    
-    return {
-      status: 303,
+		const body = await request.formData();
+		const run = await extractRegisterFormData(body);
+		const { id } = await registerRun(run);
+
+		return {
+			status: 303,
 			headers: {
 				location: `/register/${id}`
 			}
-    };
-  } catch (err: any) {
-    return {
-      status: err.status || 500,
-      body: err
-    }
-  }
+		};
+	} catch (err: any) {
+		return {
+			status: err.status || 500,
+			body: err
+		};
+	}
 };
