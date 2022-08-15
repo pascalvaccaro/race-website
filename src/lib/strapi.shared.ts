@@ -33,15 +33,17 @@ export const handleStrapiResponse = async <T>(res: Response): Promise<T> => {
 	return parseStrapiData<T>(json.data as StrapiObject<T>);
 };
 
-export const fetchFactory = (token: string) => async <T = unknown>(
-	url: Parameters<typeof fetch>[0] | URL,
-	options?: Parameters<typeof fetch>[1]
-): Promise<T> => {
-	if (!options || typeof options !== 'object') options = {};
-	options.headers = {
-		'Content-Type': 'application/json',
-		Authorization: `bearer ${token}`,
-		...(options.headers ?? {}),
+export const fetchFactory =
+	(token: string) =>
+	async <T = unknown>(
+		url: Parameters<typeof fetch>[0] | URL,
+		options?: Parameters<typeof fetch>[1]
+	): Promise<T> => {
+		if (!options || typeof options !== 'object') options = {};
+		options.headers = {
+			'Content-Type': 'application/json',
+			Authorization: `bearer ${token}`,
+			...(options.headers ?? {})
+		};
+		return fetch(url.toString(), options).then<T>(handleStrapiResponse);
 	};
-	return fetch(url.toString(), options).then<T>(handleStrapiResponse);
-};

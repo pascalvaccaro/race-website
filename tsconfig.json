@@ -13,12 +13,7 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"target": "es2020",
+		"target": "es2020"
 	},
-	"include": [
-		"./src/**/*.js",
-		"./src/**/*.ts",
-		"./src/**/*.svelte",
-		"./cypress/**/*.ts"
-	]
+	"include": ["./src/**/*.js", "./src/**/*.ts", "./src/**/*.svelte", "./cypress/**/*.ts"]
 }

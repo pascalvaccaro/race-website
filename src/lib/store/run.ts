@@ -13,8 +13,8 @@ export const run = writable<App.Run>(defaultRun);
 
 export const setRunner = async (runner: Partial<App.Runner>) => {
 	if (runner.email && (!runner.firstname || !runner.lastname)) {
-		const entries = await fetch(`/runner/${runner.email}`).then(res => res.json());
-		if (entries.length === 1) runner =  entries[0];
+		const entries = await fetch(`/runner/${runner.email}`).then((res) => res.json());
+		if (entries.length === 1) runner = entries[0];
 		else runners.set(entries);
 	}
 	run.update((state) => ({
@@ -41,5 +41,5 @@ export const needs = derived(run, (value) => ({
 		!value.runner.attachments.some(
 			(attachment) => attachment.__component === 'attachments.authorization' && attachment.valid
 		),
-		parents: value.runner.child,
+	parents: value.runner.child
 }));
