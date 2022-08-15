@@ -5,19 +5,18 @@
 	import CheckInput from './CheckInput.svelte';
 	import RadioInput from './RadioInput.svelte';
 	import Panel from './Panel.svelte';
+	import Loading from './Loading.svelte';
 
 	export let race: App.Race;
 	export let parent: App.Runner | null = null;
 	const pronoun = parent ? 'Il/elle' : 'Je';
-
-	async function onChangeEmail(event: any) {
-		const email = event.target.value;
-		if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) return;
-		setRunner({ email });
-	}
+	let loading = false;
 </script>
 
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" on:submit={() => (loading = true)}>
+	{#if loading}
+		<Loading />
+	{/if}
 	{#if parent}
 		<input type="hidden" name="runner.parent" value={parent.id} />
 	{:else}
@@ -102,6 +101,7 @@
 
 <style>
 	form {
+		position: relative;
 		min-height: 420px;
 		display: flex;
 		flex-direction: column;
