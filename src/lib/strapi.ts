@@ -1,9 +1,8 @@
 import FormData from 'form-data';
 import { stringify } from 'qs';
 
-export const STRAPI_URL = 'http://localhost:1337';
-export const STRAPI_API_TOKEN =
-	'991017012fa9f5b6a76cea6a2305b6e59c3f3f6ef4b87f8f3c2a160871651d5328682a181ae78da2e6b04876c34ca046ae9fa6a4dc20769a580ce2e4e97cceafc01768368ee5fa2a786c9172722cfa73af429a2b01b0d10a0ae3f43e1ba1b03cd969bb81efb30f03d12d34c3983d445b73c228eec7e91a729df019bc29210990';
+export const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';
+export const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
 
 type Scalar = string | number | boolean | null | undefined | Date;
 type StrapiPopulate<B, T = Omit<B, 'id'>> = {
