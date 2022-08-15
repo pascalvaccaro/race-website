@@ -1,4 +1,5 @@
 import { derived, writable } from 'svelte/store';
+import { capitalise } from '$lib/utils/string';
 import { runners } from './runners';
 
 const defaultRun = {
@@ -11,20 +12,37 @@ const defaultRun = {
 } as App.Run;
 export const run = writable<App.Run>(defaultRun);
 
-export const setRunner = async (runner: Partial<App.Runner>) => {
-	if (runner.email && (!runner.firstname || !runner.lastname)) {
-		const entries = await fetch(`/runner/${runner.email}`).then((res) => res.json());
-		if (entries.length === 1) runner = entries[0];
+const updateRunner = (runner: Partial<App.Runner>) => (state: App.Run) => ({
+	...state,
+	runner: {
+		...state.runner,
+		...runner,
+	}
+});
+
+export const setRunner = async (payload: Partial<App.Runner>) => {
+	if (payload.email || payload.fullname) {
+		const entries = await fetch('/runners/search', {
+			method: 'POST',
+			body: JSON.stringify(payload),
+			headers: { 'Content-Type': 'application/json' }
+		}).then<App.Runner[]>((res) => res.json());
+		if (entries.length === 1) payload = entries[0];
 		else runners.set(entries);
 	}
-	run.update((state) => ({
-		...state,
-		runner: {
-			...state.runner,
-			...runner
-		}
-	}));
+
+	run.update(updateRunner(payload));
 };
+
+run.subscribe((updated) => {
+	const { runner } = updated;
+	const fullname = capitalise(runner.firstname) + ' ' + capitalise(runner.lastname);
+	if (runner.fullname === fullname) return;
+	if (runner.lastname && runner.firstname)
+		setRunner({ fullname }).catch(() =>
+			run.update(updateRunner({ fullname }))
+		);
+});
 
 export const needs = derived(run, (value) => ({
 	certificate:

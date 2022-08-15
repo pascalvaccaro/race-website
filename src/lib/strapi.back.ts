@@ -15,6 +15,19 @@ export const findRunnerByEmail = async (email: string) => {
 	return authFetch<App.Runner[]>(endpoint);
 };
 
+export const findRunners = async (query: Record<string, string | undefined>) => {
+	const endpoint = new URL('/api/runners', STRAPI_URL);
+	endpoint.search = stringify({
+		filters: {
+			$and: Object.entries(query)
+				.filter(([, v]) => !!v)
+				.map(([key, $eqi]) => ({ [key]: { $eqi } }))
+		},
+		populate: ['attachments', 'attachments.file']
+	});
+	return authFetch<App.Runner[]>(endpoint);
+};
+
 export const findNextPublicRace = async () => {
 	const endpoint = new URL('/api/races', STRAPI_URL);
 	endpoint.search = stringify({

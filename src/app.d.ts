@@ -10,6 +10,7 @@ declare namespace App {
 		id: number;
 		firstname: string;
 		lastname: string;
+		fullname?: string;
 		email: string;
 		attachments: {
 			__component: string;

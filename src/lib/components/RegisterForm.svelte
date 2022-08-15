@@ -24,7 +24,7 @@
 			placeholder="Adresse email"
 			type="email"
 			name="runner.email"
-			on:change={onChangeEmail}
+			on:change={(e) => setRunner({ email: (e.currentTarget.value ?? '').trim() })}
 			required
 		/>
 	{/if}
