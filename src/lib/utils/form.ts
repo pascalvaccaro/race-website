@@ -22,8 +22,12 @@ export const extractRegisterFormData = async (data: FormData) => {
 						run[fieldName] = boolValue;
 						break;
 					case 'runner':
-					case 'race':
+						runner.id = nbValue;
 						// @ts-expect-error run.runner is a number
+						run[fieldName] = nbValue;
+						break;
+					case 'race':
+						// @ts-expect-error run.race is a number
 						run[fieldName] = nbValue;
 						break;
 				}
@@ -38,11 +42,6 @@ export const extractRegisterFormData = async (data: FormData) => {
 					case 'lastname':
 					case 'email':
 						runner[fieldName] = strValue;
-						break;
-					case 'id':
-						runner.id = nbValue;
-						run.runner = run.runner ?? {};
-						run.runner.id = nbValue;
 						break;
 					case 'parent':
 						runner.parent = nbValue;
@@ -64,6 +63,7 @@ export const extractRegisterFormData = async (data: FormData) => {
 
 	try {
 		run.runner = await createOrUpdateRunner(runner, attachments);
+		console.log('run.runner', run.runner);
 	} catch (e: unknown) {
 		const error = e as Error;
 		console.error(error.message || error.toString());

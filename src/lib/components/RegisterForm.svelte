@@ -45,7 +45,6 @@
 			/>
 		</div>
 		<input type="hidden" name="run.runner" bind:value={$run.runner.id} />
-		<input type="hidden" name="runner.id" bind:value={$run.runner.id} />
 	</SmartInput>
 
 	<div class="two-cols">
