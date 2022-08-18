@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { findRunners } from '$lib/strapi.back';
+import { findRunners } from '$lib/strapi/register';
 
 export const POST: RequestHandler<{ email?: string; fullname?: string }, App.Runner[]> = async ({ request }) => {
 	const params = await request.json();

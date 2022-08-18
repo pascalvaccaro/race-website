@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { getRun, registerRun } from '$lib/strapi.back';
+import { getRun, registerRun } from '$lib/strapi/register';
 import { extractRegisterFormData } from '$lib/utils/form';
 
 export const GET: RequestHandler<{ run: string }, { run: App.Run }> = async ({ params }) => {

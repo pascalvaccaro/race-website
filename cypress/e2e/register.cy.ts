@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { findNextPublicRace } from '$lib/strapi.back';
+import { findNextPublicRace } from '$lib/strapi/register';
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 const STRAPI_URL = process.env.STRAPI_URL || 'http://localhost:1337';

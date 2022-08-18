@@ -5,7 +5,7 @@ import {
 	findNextPublicRace,
 	registerRun,
 	createOrUpdateRunner
-} from '$lib/strapi.back';
+} from '$lib/strapi/register';
 
 describe('Strapi API', () => {
 	describe('findRunnerByEmail', () => {

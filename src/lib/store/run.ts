@@ -16,7 +16,7 @@ const updateRunner = (runner: Partial<App.Runner>) => (state: App.Run) => ({
 	...state,
 	runner: {
 		...state.runner,
-		...runner,
+		...runner
 	}
 });
 
@@ -39,9 +39,7 @@ run.subscribe((updated) => {
 	const fullname = capitalise(runner.firstname) + ' ' + capitalise(runner.lastname);
 	if (runner.fullname === fullname) return;
 	if (runner.lastname && runner.firstname)
-		setRunner({ fullname }).catch(() =>
-			run.update(updateRunner({ fullname }))
-		);
+		setRunner({ fullname }).catch(() => run.update(updateRunner({ fullname })));
 });
 
 export const needs = derived(run, (value) => ({
@@ -50,14 +48,15 @@ export const needs = derived(run, (value) => ({
 		(!value.runner.attachments?.length ||
 			!value.runner.attachments?.some(
 				(attachment) =>
-					attachment.__component === 'attachments.certificate' &&
+					attachment.caption.includes('certificate') &&
+					attachment.valid &&
 					new Date(attachment.expiry as Date).getTime() > new Date().getTime()
 			)),
 	authorization:
 		value.runner.minor &&
 		!value.runner.child &&
 		!value.runner.attachments.some(
-			(attachment) => attachment.__component === 'attachments.authorization' && attachment.valid
+			(attachment) => attachment.caption.includes('authorization') && attachment.valid
 		),
 	parents: value.runner.child
 }));

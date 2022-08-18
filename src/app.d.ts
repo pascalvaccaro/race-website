@@ -12,11 +12,7 @@ declare namespace App {
 		lastname: string;
 		fullname?: string;
 		email: string;
-		attachments: {
-			__component: string;
-			valid: boolean;
-			expiry?: Date | null;
-		}[];
+		attachments: App.File[];
 		minor: boolean;
 		child: boolean;
 		parent: Runner | number;
@@ -38,5 +34,14 @@ declare namespace App {
 			name: string;
 			gallery: unknown[];
 		};
+	}
+
+	interface File {
+		id: number;
+		name: string;
+		caption: string;
+		valid: boolean | null;
+		expiry: Date | null;
+		createdAt: Date;
 	}
 }

@@ -1,13 +1,5 @@
-import type { StrapiObject, StrapiArray, StrapiPopulate, Scalar } from './strapi';
-
-export const isDate = (date: unknown): date is Date => {
-	try {
-		new Date(date as string).toISOString();
-		return true;
-	} catch (err) {
-		return false;
-	}
-};
+import { isDate } from '$lib/utils/date';
+import type { StrapiObject, StrapiArray, StrapiPopulate, Scalar } from './typings';
 
 export const parseStrapiData = <T>(
 	data: StrapiObject<T> | StrapiArray<T> | StrapiPopulate<T> | Scalar
@@ -34,7 +26,7 @@ export const handleStrapiResponse = async <T>(res: Response): Promise<T> => {
 };
 
 export const fetchFactory =
-	(token: string) =>
+	(token: string, handler = handleStrapiResponse as any) =>
 	async <T = unknown>(
 		url: Parameters<typeof fetch>[0] | URL,
 		options?: Parameters<typeof fetch>[1]
@@ -45,5 +37,5 @@ export const fetchFactory =
 			Authorization: `bearer ${token}`,
 			...(options.headers ?? {})
 		};
-		return fetch(url.toString(), options).then<T>(handleStrapiResponse);
+		return fetch(url.toString(), options).then<T>(handler);
 	};

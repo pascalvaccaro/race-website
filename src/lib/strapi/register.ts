@@ -1,7 +1,7 @@
 import FormData from 'form-data';
 import { stringify } from 'qs';
 import { env } from '$env/dynamic/private';
-import { fetchFactory, parseStrapiData } from './strapi.shared';
+import { fetchFactory, parseStrapiData } from './shared';
 
 const { STRAPI_URL, STRAPI_API_TOKEN } = env;
 const authFetch = fetchFactory(STRAPI_API_TOKEN);
@@ -10,7 +10,7 @@ export const findRunnerByEmail = async (email: string) => {
 	const endpoint = new URL('/api/runners', STRAPI_URL);
 	endpoint.search = stringify({
 		filters: { email },
-		populate: ['attachments', 'attachments.file']
+		populate: ['attachments']
 	});
 	return authFetch<App.Runner[]>(endpoint);
 };
@@ -23,7 +23,7 @@ export const findRunners = async (query: Record<string, string | undefined>) => 
 				.filter(([, v]) => !!v)
 				.map(([key, $eqi]) => ({ [key]: { $eqi } }))
 		},
-		populate: ['attachments', 'attachments.file']
+		populate: ['attachments']
 	});
 	return authFetch<App.Runner[]>(endpoint);
 };
@@ -52,9 +52,11 @@ export const registerRun = async (run: App.Run) => {
 	return authFetch<App.Run>(endpoint, options);
 };
 
+type Attachment = { file: File; fieldName: string };
+
 export const createOrUpdateRunner = async (
 	runner: Partial<App.Runner>,
-	attachments: File[] = []
+	attachments: Attachment[] = []
 ) => {
 	const exists = Boolean(runner && 'id' in runner && typeof runner.id === 'number');
 	const endpoint = new URL('/api/runners' + (exists ? `/${runner.id}` : ''), STRAPI_URL);
@@ -62,16 +64,19 @@ export const createOrUpdateRunner = async (
 		populate: ['attachments']
 	});
 	const body = new FormData();
+	body.append('data', JSON.stringify(runner));
 	await Promise.all(
-		attachments.map(async (file, the_index) => {
+		attachments.map(async ({ file, fieldName }) => {
 			const buffer = await file.arrayBuffer();
-			body.append(`files.attachments[${the_index}].file`, Buffer.from(buffer), file.name);
+			body.append(
+				'files.attachments',
+				Buffer.from(buffer),
+				`${fieldName}-${runner.firstname}_${runner.lastname}.${file.type.split('/')[1]}`
+			);
 		})
 	);
 
-	body.append('data', JSON.stringify(runner));
-
-	const options = {
+	const submitOptions = {
 		method: exists ? 'PUT' : 'POST',
 		protocol: endpoint.protocol as 'https:',
 		hostname: endpoint.hostname,
@@ -81,7 +86,7 @@ export const createOrUpdateRunner = async (
 	};
 
 	return new Promise<App.Runner>((resolve, reject) =>
-		body.submit(options, (err, res) => {
+		body.submit(submitOptions, (err, res) => {
 			if (err) return reject(err);
 			const chunks = [] as string[];
 			res.on('data', (chunk) => chunks.push(chunk));

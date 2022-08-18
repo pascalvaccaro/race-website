@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
 	import { onMount } from 'svelte';
-	import { checkOutProduct } from '$lib/utils/stripe';
-	import type { StripeProduct } from '$lib/utils/stripe';
+	import type { StripeProduct } from '$lib/strapi/stripe';
 
 	let products: StripeProduct[] = [];
 	onMount(() =>
@@ -10,11 +9,21 @@
 			.then((res) => res.json())
 			.then((res) => (products = res.res as StripeProduct[]))
 	);
+
+	async function selectProduct(product: StripeProduct) {
+		await fetch('/runners/donation', {
+			method: 'POST',
+			body: JSON.stringify(product),
+			headers: { 'Content-Type': 'application/json' }
+		})
+			.then((res) => res.json())
+			.then((res) => (res.id ? window.location.replace(res.url) : undefined));
+	}
 </script>
 
 <div class="container">
 	{#each products as product}
-		<button type="button" on:click={() => checkOutProduct(product)}>
+		<button type="button" on:click={() => selectProduct(product)}>
 			{product.title}
 		</button>
 	{/each}

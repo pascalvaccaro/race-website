@@ -1,5 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { findNextPublicRace, registerRun } from '$lib/strapi.back';
+import { findNextPublicRace, registerRun } from '$lib/strapi/register';
 import { extractRegisterFormData } from '$lib/utils/form';
 
 export async function GET() {

@@ -1,11 +1,11 @@
-import { createOrUpdateRunner } from '$lib/strapi.back';
+import { createOrUpdateRunner } from '$lib/strapi/register';
 
 export const extractRegisterFormData = async (data: FormData) => {
 	const run = {
 		chrono: '00:00:00.000'
 	} as App.Run;
 	const runner = {} as App.Runner;
-	const attachments = [] as File[];
+	const attachments = [] as { file: File; fieldName: string }[];
 
 	data.forEach((value, key) => {
 		const [modelName, fieldName] = key.split('.');
@@ -51,11 +51,9 @@ export const extractRegisterFormData = async (data: FormData) => {
 				}
 				break;
 			case 'files':
-				attachments.push(value as File);
-				runner.attachments = runner.attachments ?? [];
-				runner.attachments.push({
-					__component: `attachments.${fieldName}`,
-					valid: false
+				attachments.push({
+					fieldName,
+					file: value as File,
 				});
 				break;
 		}
@@ -63,7 +61,6 @@ export const extractRegisterFormData = async (data: FormData) => {
 
 	try {
 		run.runner = await createOrUpdateRunner(runner, attachments);
-		console.log('run.runner', run.runner);
 	} catch (e: unknown) {
 		const error = e as Error;
 		console.error(error.message || error.toString());
