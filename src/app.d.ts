@@ -21,6 +21,7 @@ declare namespace App {
 	interface Run {
 		id: number;
 		chrono: string;
+		numberSign: number;
 		walking: boolean;
 		copyright: boolean;
 		runner: Runner;
@@ -34,6 +35,7 @@ declare namespace App {
 			name: string;
 			gallery: unknown[];
 		};
+		runs: App.Run[];
 	}
 
 	interface File {

@@ -17,6 +17,7 @@
 	.wrapper {
 		min-height: 100vh;
 		max-width: 520px;
+		width: calc(100% - 32px);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
