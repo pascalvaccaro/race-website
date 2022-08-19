@@ -24,9 +24,6 @@ export const POST: RequestHandler<{ id: string }> = async ({ request, params }) 
 	);
 
 	return { 
-		status: 303,
-		headers: {
-			location: `/`
-		}
+		status: 200,
 	}
 };

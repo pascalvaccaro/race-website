@@ -13,15 +13,14 @@
 		width: 100%;
 		height: 100%;
 		z-index: 100;
-		background-color: rgba(255, 255, 255, 0.75);
 		pointer-events: none;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
 		border-radius: 4px;
+		background-color: rgba(255, 255, 255, 0.75);
 		box-shadow: 2px 2px 4px gray;
-		background-color: rgba(255, 255, 255, 0.65);
 	}
 	div.loader {
 		width: 6rem;

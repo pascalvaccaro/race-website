@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Loading from '$lib/components/Loading.svelte';
 	import dayjs, { type Dayjs } from 'dayjs';
 	import 'dayjs/locale/fr';
 
@@ -11,21 +12,23 @@
 
 	let inputVal = '';
 	let interval: number;
-	let chrono = 'Stopped';
+	const defaultChrono = '00:00.000';
+	let chrono = defaultChrono;
+	let loading = false;
 
 	const digits = ['7', '8', '9', '4', '5', '6', '1', '2', '3', ',', '0', '<'];
 
 	function onReset() {
 		if (interval >= 0) clearInterval(interval);
 		startTime = null;
-		chrono = 'Stopped';
+		chrono = defaultChrono;
 	}
 	function onStart() {
 		onReset();
 		timesMap.clear();
 		lastRuns = [];
 		startTime = dayjs();
-		chrono = '00:00.000';
+		chrono = defaultChrono;
 		interval = setInterval(() => {
 			const now = dayjs();
 			const time = now.diff(startTime);
@@ -38,6 +41,7 @@
 	}
 
 	async function exportRuns(race: App.Race) {
+		loading = true;
 		const { runs, id } = race;
 		const data = [] as Pick<App.Run, 'chrono' | 'numberSign'>[];
 		for (const [numberSign, times] of timesMap.entries()) {
@@ -49,12 +53,13 @@
 			if (!run) data.push({ numberSign, chrono });
 			else data.push({ ...run, chrono });
 		}
-		return fetch(`/race/${id}`, {
+		await fetch(`/race/${id}`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ data }),
-			redirect: 'follow'
+			body: JSON.stringify({ data })
 		});
+		loading = false;
+		timesMap = new Map<number, number[]>();
 	}
 
 	function registerTime() {
@@ -72,7 +77,7 @@
 
 	function onSubmit() {
 		if (!startTime) throw new Error('no start time set');
-		inputVal.split(',').map(Number).forEach(registerTime());
+		inputVal.split(',').filter(Boolean).map(Number).forEach(registerTime());
 		inputVal = '';
 		throttleTime = null;
 	}
@@ -126,7 +131,9 @@
 			{/each}
 		</div>
 
-		{#if chrono !== 'Stopped'}
+		{#if loading}
+			<Loading />
+		{:else if chrono !== defaultChrono}
 			<button class="fullWidth" on:click={onSubmit}>Enregistrer</button>
 		{:else if timesMap.size > 0}
 			<button class="fullWidth" on:click={() => onStop(true)}>Terminer</button>
@@ -135,7 +142,7 @@
 		{/if}
 	</section>
 	<footer class="operations">
-		{#if chrono !== 'Stopped'}
+		{#if chrono !== defaultChrono}
 			<button on:click={() => onStop()}>Stop</button>
 		{:else if timesMap.size > 0}
 			<button on:click={onStart}>Redémarrer</button>
@@ -146,10 +153,11 @@
 <style>
 	.container {
 		width: 100%;
-		height: 100%;
+		height: 100vh;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		justify-content: space-between;
 	}
 	.container > *,
 	.container > section > * {
@@ -166,16 +174,14 @@
 		max-height: calc(100vh - 6rem);
 	}
 	.scores {
-		position: relative;
+		flex-grow: 1;
 		width: 100%;
-		padding: 1rem;
 		list-style: none;
 		list-style-type: none;
-		background-color: rgba(255, 255, 255, 0.65);
-		overflow-y: hidden;
+		padding: 1rem;
 		padding-bottom: 2rem;
-		flex-grow: 1;
 		overflow-y: auto;
+		background-color: rgba(255, 255, 255, 0.65);
 	}
 	.scores > li {
 		display: flex;
@@ -241,6 +247,7 @@
 	}
 
 	button.fullWidth {
+		height: 4rem;
 		width: 100%;
 		padding: 1rem;
 		background-color: blue;
@@ -251,6 +258,7 @@
 
 	.operations {
 		width: 100%;
+		min-height: 5rem;
 		display: flex;
 		justify-content: center;
 		align-items: center;
