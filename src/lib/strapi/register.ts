@@ -6,6 +6,22 @@ import { fetchFactory, parseStrapiData } from './shared';
 const { STRAPI_URL, STRAPI_API_TOKEN } = env;
 const authFetch = fetchFactory(STRAPI_API_TOKEN);
 
+export const getRunner = async (id: string | number) => {
+	const endpoint = new URL('/api/runners/' + id, STRAPI_URL);
+	endpoint.search = stringify({
+		populate: ['attachments']
+	});
+	return authFetch<App.Runner>(endpoint);
+};
+
+export const getRun = async (id: string | number) => {
+	const endpoint = new URL('/api/runs/' + id, STRAPI_URL);
+	endpoint.search = stringify({
+		populate: ['race', 'race.park', 'runner']
+	});
+	return authFetch<App.Run>(endpoint);
+};
+
 export const findRunnerByEmail = async (email: string) => {
 	const endpoint = new URL('/api/runners', STRAPI_URL);
 	endpoint.search = stringify({
@@ -61,7 +77,7 @@ export const createOrUpdateRunner = async (
 	const exists = Boolean(runner && 'id' in runner && typeof runner.id === 'number');
 	const endpoint = new URL('/api/runners' + (exists ? `/${runner.id}` : ''), STRAPI_URL);
 	endpoint.search = stringify({
-		populate: ['attachments']
+		populate: ['attachments', 'parent']
 	});
 	const body = new FormData();
 	body.append('data', JSON.stringify(runner));
@@ -101,12 +117,4 @@ export const createOrUpdateRunner = async (
 			res.on('error', reject);
 		})
 	);
-};
-
-export const getRun = async (id: string | number) => {
-	const endpoint = new URL('/api/runs/' + id, STRAPI_URL);
-	endpoint.search = stringify({
-		populate: ['race', 'race.park', 'runner']
-	});
-	return authFetch<App.Run>(endpoint);
 };

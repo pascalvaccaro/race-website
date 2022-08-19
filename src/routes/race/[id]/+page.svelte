@@ -3,9 +3,10 @@
 	import 'dayjs/locale/fr';
 	import { startTime, setStartTime } from '$lib/store/race';
 	import Loading from '$lib/components/Loading.svelte';
-
-	export let race: App.Race;
-
+	import type { PageData } from './$types';
+	
+	export let data: PageData;
+	$: race = data.race as App.Race;
 	let throttleTime: Dayjs | null;
 	let timesMap: Map<number, number[]> = new Map<number, number[]>();
 	let lastRuns: Array<Partial<App.Run>> = [];

@@ -48,7 +48,7 @@ export const needs = derived(run, (value) => ({
 		(!value.runner.attachments?.length ||
 			!value.runner.attachments?.some(
 				(attachment) =>
-					attachment.caption.includes('certificate') &&
+					attachment.name.includes('certificate') &&
 					attachment.valid &&
 					new Date(attachment.expiry as Date).getTime() > new Date().getTime()
 			)),
@@ -56,7 +56,7 @@ export const needs = derived(run, (value) => ({
 		value.runner.minor &&
 		!value.runner.child &&
 		!value.runner.attachments.some(
-			(attachment) => attachment.caption.includes('authorization') && attachment.valid
+			(attachment) => attachment.name.includes('authorization') && attachment.valid
 		),
 	parents: value.runner.child
 }));

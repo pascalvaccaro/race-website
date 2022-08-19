@@ -1,7 +1,7 @@
 <script lang="ts">
-  export let race: App.Race;
+	import type { PageData } from './$types';
+	export let data: PageData;
+	$: race = data.race as App.Race;
 </script>
 
-<div>
-  
-</div>
+<div />

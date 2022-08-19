@@ -5,9 +5,12 @@
 	import CopyButton from '$lib/components/CopyButton.svelte';
 	import Form from '$lib/components/RegisterForm.svelte';
 	import PaymentForm from '$lib/components/PaymentForm.svelte';
+	import type { PageData } from './$types';
+	
+	export let data: PageData;
+	$: run = data.run as App.Run;
+	$: runner = data.runner ?? run.runner;
 
-	export let run: App.Run;
-	export let runner: App.Runner = run.runner as App.Runner;
 	const panels = {
 		registerOthers: false,
 		registerChild: false,
@@ -15,7 +18,7 @@
 		share: false
 	};
 	const registerUrl = (globalThis.location ?? {}).origin;
-	const startTime = getRaceStartDateTime(run.race as App.Race);
+	$: startTime = getRaceStartDateTime(run.race as App.Race);
 </script>
 
 <Disclaimer>
@@ -31,7 +34,7 @@
 <div class="options">
 	<Panel title="Je souhaite inscrire d'autres personnes..." bind:value={panels.registerOthers}>
 		<Panel title="En l'inscrivant moi-même..." bind:value={panels.registerChild}>
-			<Form race={run.race} parent={runner || run.runner} />
+			<Form race={run.race} parent={runner} />
 		</Panel>
 		<Panel title="En partageant la course sur les réseaux sociaux..." bind:value={panels.share}>
 			TODO

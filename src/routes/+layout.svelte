@@ -24,6 +24,7 @@
 		justify-content: center;
 		flex-wrap: wrap;
 		padding: 8px 16px;
+		box-sizing: border-box;
 	}
 	:global(.alert) {
 		padding: 4px 8px;

@@ -1,18 +1,14 @@
-import type { RequestHandler } from '@sveltejs/kit';
 import { getRace } from '$lib/strapi/race';
+import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
-export const GET: RequestHandler<{ id: string }, { race: App.Race } | unknown> = async ({
+export const load: PageServerLoad<{ race: App.Race }> = async ({
 	params
 }) => {
 	try {
 		const race = await getRace(params.id);
-		return {
-			body: { race }
-		};
-	} catch (err: unknown) {
-		return {
-			status: 500,
-			body: err as App.Race
-		};
+		return { race };
+	} catch (err: any) {
+		throw error(err.statusCode ?? 500, err.message ?? err.toString());
 	}
 };

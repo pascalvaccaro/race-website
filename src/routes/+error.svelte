@@ -1,25 +1,13 @@
-<script context="module" lang="ts">
-	import type { Load } from '@sveltejs/kit';
-
-	const load: Load = ({ error, status }) => ({
-		props: {
-			title: `${status}: ${error?.message ?? error?.toString()}`,
-			stack: error?.stack || ''
-		}
-	});
-	export { load };
-</script>
-
 <script lang="ts">
 	import { dev } from '$app/env';
-	export let title: string;
-	export let stack: string;
+	import { page } from '$app/stores';
 </script>
 
 <div>
-	<h1>{title}</h1>
+	<h1>{$page.error.message}</h1>
 	{#if dev}
-		<pre>{stack}</pre>
+		<pre>{$page.error.status}</pre>
+		<pre>{$page.error.stack}</pre>
 	{/if}
 </div>
 

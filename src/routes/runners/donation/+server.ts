@@ -1,3 +1,4 @@
+import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 import { checkOutProduct, type StripeProduct } from '$lib/strapi/stripe';
 
@@ -6,11 +7,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		const params = (await request.json()) as StripeProduct;
 		const response = await checkOutProduct(params);
 
-		return { body: response };
+		return json(response)
 	} catch (err: any) {
-		return {
-			status: 500,
-			body: err.message ?? err.toString()
-		};
+		throw error(400, err.message ?? err.toString());
 	}
 };
