@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Loading from '$lib/components/Loading.svelte';
 	import dayjs, { type Dayjs } from 'dayjs';
 	import 'dayjs/locale/fr';
+	import { startTime, setStartTime } from '$lib/store/race';
+	import Loading from '$lib/components/Loading.svelte';
 
 	export let race: App.Race;
 
-	let startTime: Dayjs | null;
 	let throttleTime: Dayjs | null;
 	let timesMap: Map<number, number[]> = new Map<number, number[]>();
 	let lastRuns: Array<Partial<App.Run>> = [];
@@ -20,18 +20,18 @@
 
 	function onReset() {
 		if (interval >= 0) clearInterval(interval);
-		startTime = null;
+		setStartTime(null);
 		chrono = defaultChrono;
 	}
 	function onStart() {
 		onReset();
 		timesMap.clear();
 		lastRuns = [];
-		startTime = dayjs();
+		setStartTime(dayjs());
 		chrono = defaultChrono;
 		interval = setInterval(() => {
 			const now = dayjs();
-			const time = now.diff(startTime);
+			const time = now.diff($startTime);
 			chrono = dayjs(time).format('mm:ss.SSS');
 		}, 100) as unknown as number;
 	}
@@ -65,9 +65,9 @@
 	function registerTime() {
 		const now = dayjs();
 		return (numberSign: number) => {
-			if (!startTime) throw new Error('no start time set');
+			if (!$startTime) throw new Error('no start time set');
 			if (!numberSign || isNaN(numberSign)) throw new Error('invalid number sign');
-			const time = now.diff(startTime.add(now.diff(throttleTime ?? now)));
+			const time = now.diff($startTime.add(now.diff(throttleTime ?? now)));
 			const chrono = dayjs(time).format('mm:ss.SSS');
 			const times = timesMap.get(numberSign) ?? [];
 			timesMap = timesMap.set(numberSign, [...times, time]);
@@ -76,13 +76,13 @@
 	}
 
 	function onSubmit() {
-		if (!startTime) throw new Error('no start time set');
+		if (!$startTime) throw new Error('no start time set');
 		inputVal.split(',').filter(Boolean).map(Number).forEach(registerTime());
 		inputVal = '';
 		throttleTime = null;
 	}
 	function onInputDigit(digit: string) {
-		if (!startTime) return;
+		if (!$startTime) return;
 		if (!digits.includes(digit)) return;
 
 		if (inputVal.length === 0) {
@@ -141,6 +141,7 @@
 			<button class="fullWidth" on:click={onStart}>Démarrer</button>
 		{/if}
 	</section>
+
 	<footer class="operations">
 		{#if chrono !== defaultChrono}
 			<button on:click={() => onStop()}>Stop</button>
