@@ -8,7 +8,7 @@
 
 	onMount(async () => {
 		if (sessionId)
-			transaction = await fetch(`/runners/donation/${sessionId}`).then((res) => res.json());
+			transaction = await fetch(`/payment/${sessionId}`).then((res) => res.json());
 		console.debug(transaction);
 	});
 </script>

@@ -22,13 +22,17 @@
 </script>
 
 <Disclaimer>
-	Merci {runner.firstname} !
-	{#if runner.id === run.runner.id}
-		Ton inscription
-	{:else}
-		L'inscription de {run.runner.firstname}
-	{/if}
-	est confirmée pour la course du {startTime} au parc {run.race.park.name}
+	<h2 style="margin: 0;">
+		Merci {runner.firstname} !
+	</h2>
+	<p style="margin: 0;">
+		{#if runner.id === run.runner.id}
+			Ton inscription
+		{:else}
+			L'inscription de {run.runner.firstname}
+		{/if}
+		est confirmée pour la course du {startTime} au parc {run.race.park.name}
+	</p>
 </Disclaimer>
 
 <div class="options">

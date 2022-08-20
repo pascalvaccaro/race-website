@@ -11,7 +11,7 @@
 </script>
 
 <Disclaimer>
-	La prochaine course a lieu le {startTime} au parc {race.park.name}
+	<h2 style="margin: 0;">La prochaine course a lieu le {startTime} au parc {race.park.name}</h2>
 </Disclaimer>
 
 <Form {race} />

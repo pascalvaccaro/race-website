@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount, onDestroy } from 'svelte';
 	import { run, setRunner, needs } from '$lib/store/run';
 	import SmartInput from './SmartInput.svelte';
 	import FileInput from './FileInput.svelte';
@@ -10,7 +11,9 @@
 	export let race: App.Race;
 	export let parent: App.Runner | null = null;
 	const pronoun = parent ? 'Il/elle' : 'Je';
-	let loading = false;
+	let loading = true;
+	onMount(() => (loading = false));
+	onDestroy(() => (loading = false));
 </script>
 
 <form method="post" enctype="multipart/form-data" on:submit={() => (loading = true)}>

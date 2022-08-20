@@ -9,7 +9,7 @@ export const extractRegisterFormData = async (data: FormData) => {
 
 	data.forEach((value, key) => {
 		const [modelName, fieldName] = key.split('.');
-		const strValue = value.toString();
+		const strValue = value.toString().trim();
 		if (!strValue) return;
 
 		const nbValue = !isNaN(+strValue) ? +strValue : 0;

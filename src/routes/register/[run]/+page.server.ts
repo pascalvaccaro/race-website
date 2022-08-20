@@ -24,8 +24,9 @@ export const POST: Action<{ run: string }> = async ({ request }) => {
 	const data = await extractRegisterFormData(body);
 	const parent = (data.runner?.parent as App.Runner)?.id ?? null;
 	const run = await registerRun(data);
+	const location = `/register/${run.id}${parent ? '?parentId=' + parent : ''}`;
 
 	return {
-		location: `/register/${run.id}${parent ? '?parentId=' + parent : ''}`
+		location
 	};
 };

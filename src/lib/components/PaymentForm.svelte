@@ -11,7 +11,7 @@
 	);
 
 	async function selectProduct(product: StripeProduct) {
-		await fetch('/runners/donation', {
+		await fetch('/payment', {
 			method: 'POST',
 			body: JSON.stringify(product),
 			headers: { 'Content-Type': 'application/json' }
