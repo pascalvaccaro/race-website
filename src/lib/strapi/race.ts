@@ -1,11 +1,13 @@
 import { stringify } from 'qs';
 import { env } from '$env/dynamic/private';
 import { fetchFactory } from './shared';
+import { findNextPublicRace } from './register';
 
 const { STRAPI_URL, STRAPI_API_TOKEN } = env;
 const authFetch = fetchFactory(STRAPI_API_TOKEN);
 
 export const getRace = async (id: string) => {
+	if (id === 'next') return findNextPublicRace();
 	const endpoint = new URL('/api/races/' + id, STRAPI_URL);
 	endpoint.search = stringify({
 		populate: ['runs', 'runs.runner', 'park']

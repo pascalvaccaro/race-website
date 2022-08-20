@@ -9,3 +9,5 @@ export const load: PageServerLoad<{ runner: App.Runner }> = async ({ params }) =
 	if (!runner) throw error(404);
 	return { runner };
 };
+
+export const prerender = true;
