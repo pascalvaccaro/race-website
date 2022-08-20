@@ -6,11 +6,9 @@ import { fetchFactory, parseStrapiData } from './shared';
 const { STRAPI_URL, STRAPI_API_TOKEN } = env;
 const authFetch = fetchFactory(STRAPI_API_TOKEN);
 
-export const getRunner = async (id: string | number) => {
+export const getRunner = async (id: string | number, query: Record<string, any> = { populate: ['attachments'] }) => {
 	const endpoint = new URL('/api/runners/' + id, STRAPI_URL);
-	endpoint.search = stringify({
-		populate: ['attachments']
-	});
+	endpoint.search = stringify(query);
 	return authFetch<App.Runner>(endpoint);
 };
 

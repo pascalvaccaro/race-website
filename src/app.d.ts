@@ -17,6 +17,7 @@ declare namespace App {
 		child: boolean;
 		parent: Runner | number;
 		children: Runner[] | number[];
+		runs?: App.Run[];
 	}
 	interface Run {
 		id: number;
@@ -47,3 +48,5 @@ declare namespace App {
 		createdAt: Date;
 	}
 }
+
+declare module 'svelte-fusioncharts';

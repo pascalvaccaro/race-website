@@ -26,6 +26,12 @@
 		padding: 8px 16px;
 		box-sizing: border-box;
 	}
+
+	@media screen and (min-width: 520px) {
+		.wrapper {
+			max-width: 100%;
+		}
+	}
 	:global(.alert) {
 		padding: 4px 8px;
 		color: rgba(230, 40, 40);

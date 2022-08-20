@@ -12,6 +12,7 @@ specifiers:
   eslint-config-prettier: ^8.3.0
   eslint-plugin-svelte3: ^4.0.0
   form-data: ^4.0.0
+  highcharts: ^10.2.0
   html5-qrcode: ^2.2.1
   prettier: ^2.5.1
   prettier-plugin-svelte: ^2.5.0
@@ -26,6 +27,7 @@ specifiers:
 dependencies:
   dayjs: 1.11.4
   form-data: 4.0.0
+  highcharts: 10.2.0
   html5-qrcode: 2.2.1
   qs: 6.11.0
 
@@ -1678,6 +1680,10 @@ packages:
     engines: {node: '>= 0.4.0'}
     dependencies:
       function-bind: 1.1.1
+
+  /highcharts/10.2.0:
+    resolution: {integrity: sha512-MvLo4dzR2Vo7Y85dsqJ07uabBXSSIRKRRdW4l9IGP55h2jYWNm/m9JBszVVxySH5Lda6g+Ins9NdGppZJpjNCA==}
+    dev: false
 
   /html5-qrcode/2.2.1:
     resolution: {integrity: sha512-itYnSlSxC3gNRe825mUkKaMzlmevLc4hpH2XLlhCdiEYIE3aMdQUr1XjQ9/zk7NuRMcYRerlbCaMKM+Z66KpSg==}
