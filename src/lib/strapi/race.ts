@@ -23,12 +23,30 @@ export const createRun =
 		return authFetch<App.Run>(endpoint, options);
 	};
 
-export const updateRun =
-	(race: string | number) => async (run: App.Run) => {
-		const endpoint = new URL('/api/runs/' + run.id, STRAPI_URL);
-		const options = {
-			method: 'PUT',
-			body: JSON.stringify({ data: { ...run, race } })
-		};
-		return authFetch<App.Run>(endpoint, options);
+export const updateRun = (race: string | number) => async (run: App.Run) => {
+	const endpoint = new URL('/api/runs/' + run.id, STRAPI_URL);
+	const options = {
+		method: 'PUT',
+		body: JSON.stringify({ data: { ...run, race } })
 	};
+	return authFetch<App.Run>(endpoint, options);
+};
+
+export const findRuns = async (race: string | number) => {
+	const endpoint = new URL('/api/runs', STRAPI_URL);
+	endpoint.search = stringify({
+		populate: ['race'],
+		filters: { race }
+	});
+	return authFetch<App.Run[]>(endpoint);
+};
+
+export const findNextAvailableNumberSign = async (run: App.Run) => {
+	if (run.numberSign > 0) return run.numberSign;
+	const { race } = run;
+	const runs = await findRuns(race.id);
+	const numbers = runs.map(({ numberSign }) => numberSign);
+	let numberSign = 1;
+	while (numbers.includes(numberSign)) numberSign++;
+	return numberSign;
+};

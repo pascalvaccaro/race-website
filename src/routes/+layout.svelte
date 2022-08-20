@@ -15,9 +15,9 @@
 		justify-content: center;
 	}
 	.wrapper {
-		min-height: 100vh;
+		min-height: calc(100vh - 16px);
 		max-width: 520px;
-		width: calc(100% - 32px);
+		width: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

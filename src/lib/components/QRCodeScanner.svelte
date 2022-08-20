@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { Html5Qrcode } from 'html5-qrcode';
 	import { onMount } from 'svelte';
+	import Loading from './Loading.svelte';
 
+	export let race: App.Race;
 	let scanning = false;
+	let loading = false;
 
-	let html5Qrcode;
+	let html5Qrcode: InstanceType<typeof Html5Qrcode>;
 
 	onMount(init);
 
@@ -17,7 +20,7 @@
 			{ facingMode: 'environment' },
 			{
 				fps: 10,
-				qrbox: { width: 250, height: 250 }
+				qrbox: { width: 250, height: 500 }
 			},
 			onScanSuccess,
 			onScanFailure
@@ -30,17 +33,37 @@
 		scanning = false;
 	}
 
-	function onScanSuccess(decodedText, decodedResult) {
-		alert(`Code matched = ${decodedText}`);
-		console.log(decodedResult);
+	async function onScanSuccess(decodedText: string) {
+		html5Qrcode.pause(true);
+		loading = true;
+		try {
+			const body = JSON.stringify(JSON.parse(decodedText));
+			const res = await fetch(`/race/${race.id}/run`, {
+				method: 'PUT',
+				body,
+				redirect: 'follow',
+				headers: { 'Content-Type': 'application/json' }
+			});
+			loading = false;
+			if (res.redirected) window.location.assign(res.url);
+		} catch (err) {
+			console.error(err);
+			return;
+		} finally {
+			loading = false;
+			html5Qrcode.resume();
+		}
 	}
 
-	function onScanFailure(error) {
+	function onScanFailure(error: unknown) {
 		console.warn(`Code scan error = ${error}`);
 	}
 </script>
 
 <main>
+	{#if loading}
+		<Loading />
+	{/if}
 	<reader id="reader" />
 	{#if scanning}
 		<button on:click={stop}>stop</button>
@@ -55,11 +78,22 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 20px;
+		gap: 1rem;
 	}
 	reader {
+		margin-top: 2rem;
 		width: 100%;
 		min-height: 500px;
-		background-color: black;
+		background-color: rgba(0, 0, 0, 0.5);
+		border: 1px solid white;
+	}
+
+	button {
+		text-transform: uppercase;
+		padding: 1rem 2rem;
+		font-size: large;
+		font-weight: bold;
+		background-color: blue;
+		color: white;
 	}
 </style>
