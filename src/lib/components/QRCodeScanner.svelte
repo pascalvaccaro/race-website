@@ -38,8 +38,8 @@
 		loading = true;
 		try {
 			const body = JSON.stringify(JSON.parse(decodedText));
-			const res = await fetch(`/race/${race.id}/run`, {
-				method: 'PUT',
+			const res = await fetch(`/race/${race.id}/run/checkin`, {
+				method: 'POST',
 				body,
 				redirect: 'follow',
 				headers: { 'Content-Type': 'application/json' }

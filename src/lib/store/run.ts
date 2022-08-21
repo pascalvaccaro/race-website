@@ -22,9 +22,8 @@ const updateRunner = (runner: Partial<App.Runner>) => (state: App.Run) => ({
 
 export const setRunner = async (payload: Partial<App.Runner>) => {
 	if (payload.email || payload.fullname) {
-		const entries = await fetch('/runner/search', {
-			method: 'POST',
-			body: JSON.stringify(payload),
+		const search = new URLSearchParams(payload as Record<string, string>);
+		const entries = await fetch('/runner?' + search.toString(), {
 			headers: { 'Content-Type': 'application/json' }
 		}).then<App.Runner[]>((res) => res.json());
 		if (entries.length === 1) payload = entries[0];

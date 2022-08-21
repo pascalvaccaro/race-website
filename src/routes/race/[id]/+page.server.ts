@@ -1,21 +1,25 @@
+import type { Action } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import {  error, type Action } from '@sveltejs/kit';
-import { createRun, getRace, updateRun } from '$lib/strapi/race';
+import { error } from '@sveltejs/kit';
+import { findNextPublicRace, registerRun } from '$lib/strapi/register';
+import { extractRegisterFormData } from '$lib/utils/form';
 
-export const load: PageServerLoad<{ race: App.Race }> = async ({
-	params
-}) => {
+export const load: PageServerLoad<{ race: App.Race }> = async () => {
+	const race = await findNextPublicRace();
+	if (!race) throw error(404);
+	return { race };
+}
+
+export const POST: Action = async ({ request }) => {
 	try {
-		const race = await getRace(params.id);
-		return { race };
-	} catch (err: any) {
-		throw error(err.statusCode ?? 500, err.message)
-	}
-};
+		const body = await request.formData();
+		const run = await extractRegisterFormData(body);
+		const { id } = await registerRun(run);
 
-export const POST: Action<{ id: string }> = async ({ request, params }) => {
-	const { data } = await request.json();
-	await Promise.all(
-		data.map((run: App.Run) => ('id' in run ? updateRun : createRun)(params.id)(run))
-	);
+		return {
+			location: `/register/${id}`
+		};
+	} catch (err: any) {
+		throw error(err.statusCode || err.status || 500, err.message);
+	}
 };

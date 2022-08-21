@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/env';
 	import { getRaceStartDateTime } from '$lib/utils/date';
 	import Disclaimer from '$lib/components/Disclaimer.svelte';
 	import Panel from '$lib/components/Panel.svelte';
@@ -17,7 +18,7 @@
 		makeAGift: false,
 		share: false
 	};
-	const registerUrl = (globalThis.location ?? {}).origin;
+	const registerUrl = browser ? (globalThis.location ?? {}).origin + '/race/next' : '';
 	$: startTime = getRaceStartDateTime(run.race as App.Race);
 </script>
 

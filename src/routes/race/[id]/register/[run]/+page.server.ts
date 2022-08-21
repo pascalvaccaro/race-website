@@ -19,12 +19,12 @@ export const load: PageServerLoad<{ run: App.Run; runner: App.Runner | null }> =
 	return { run, runner: null };
 };
 
-export const POST: Action<{ run: string }> = async ({ request }) => {
+export const POST: Action = async ({ request }) => {
 	const body = await request.formData();
 	const data = await extractRegisterFormData(body);
 	const parent = (data.runner?.parent as App.Runner)?.id ?? null;
 	const run = await registerRun(data);
-	const location = `/register/${run.id}${parent ? '?parentId=' + parent : ''}`;
+	const location = `/race/${run.race.id}/register/${run.id}${parent ? '?parentId=' + parent : ''}`;
 
 	return {
 		location

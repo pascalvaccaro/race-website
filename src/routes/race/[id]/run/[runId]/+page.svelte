@@ -10,7 +10,7 @@
 	<h3>{run.runner.fullname} a le numéro</h3>
 	<h1>{run.numberSign}</h1>
 </Disclaimer>
-<a href={`/race/${run.race.id}/run`}>Retour au scanner</a>
+<a href={`/race/${run.race.id}/run/checkin`}>Retour au scanner</a>
 
 <style>
 	h3, h1 {
