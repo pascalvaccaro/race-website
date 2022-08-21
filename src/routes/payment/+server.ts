@@ -4,10 +4,10 @@ import { checkOutProduct, type StripeProduct } from '$lib/strapi/stripe';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const params = (await request.json()) as StripeProduct;
+		const params: StripeProduct = await request.json();
 		const response = await checkOutProduct(params);
 
-		return json(response)
+		return json(response);
 	} catch (err: any) {
 		throw error(400, err.message ?? err.toString());
 	}

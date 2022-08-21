@@ -10,3 +10,15 @@ export type StrapiObject<T> = T extends Array<unknown>
 			attributes: StrapiPopulate<T>;
 	  };
 export type StrapiArray<T> = Array<StrapiObject<T>>;
+export type StrapiResponse<T> = {
+	data: T;
+	error: null;
+} | {
+	data: null;
+	error: {
+		status: number;
+		name: string;
+		message: string;
+		details: Record<string, unknown>
+	}
+}

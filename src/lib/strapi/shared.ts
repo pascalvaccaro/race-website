@@ -1,5 +1,5 @@
 import { isDate } from '$lib/utils/date';
-import type { StrapiObject, StrapiArray, StrapiPopulate, Scalar } from './typings';
+import type { StrapiObject, StrapiArray, StrapiPopulate, Scalar, StrapiResponse } from './typings';
 
 export const parseStrapiData = <T>(
 	data: StrapiObject<T> | StrapiArray<T> | StrapiPopulate<T> | Scalar
@@ -20,9 +20,9 @@ export const parseStrapiData = <T>(
 };
 
 export const handleStrapiResponse = async <T>(res: Response): Promise<T> => {
-	const json = await res.json();
-	if (json.error) throw new Error(json.error.message);
-	return parseStrapiData<T>(json.data as StrapiObject<T>);
+	const json = await res.json() as StrapiResponse<StrapiObject<T>>;
+	if (json.error) throw json.error;
+	return parseStrapiData<T>(json.data);
 };
 
 export const fetchFactory =

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Html5Qrcode } from 'html5-qrcode';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import Loading from './Loading.svelte';
 
-	export let race: App.Race;
 	let scanning = false;
 	let loading = false;
 
@@ -38,10 +38,9 @@
 		loading = true;
 		try {
 			const body = JSON.stringify(JSON.parse(decodedText));
-			const res = await fetch(`/race/${race.id}/run/checkin`, {
+			const res = await fetch($page.url.pathname, {
 				method: 'POST',
 				body,
-				redirect: 'follow',
 				headers: { 'Content-Type': 'application/json' }
 			});
 			loading = false;

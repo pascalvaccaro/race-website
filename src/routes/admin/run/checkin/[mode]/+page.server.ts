@@ -1,19 +1,19 @@
-import { error, redirect, type Action } from '@sveltejs/kit';
-import { getRace, updateRun, findNextAvailableNumberSign } from '$lib/strapi/race';
+import { error, type Action } from '@sveltejs/kit';
+import { getRace, findNextAvailableNumberSign } from '$lib/strapi/race';
 import { registerRun } from '$lib/strapi/register';
 import { extractRegisterFormData } from '$lib/utils/form';
-import type { PageServerLoad } from '../../../../../../.svelte-kit/types/src/routes/race/[id]/run/$types';
+import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad<{ race: App.Race }> = async ({ params }) => {
+export const load: PageServerLoad<{ race: App.Race }> = async () => {
 	try {
-		const race = await getRace(params.id);
+		const race = await getRace('next');
 		return { race };
 	} catch (err: any) {
 		throw error(err.statusCode ?? 500, err.message ?? err.toString());
 	}
 };
 
-export const POST: Action<{ id: string }> = async ({ params, request }) => {
+export const POST: Action<{ id: string }> = async ({ request }) => {
 	let data: App.Run;
 	if (request.headers.get('Content-Type') === 'application/json') {
 		data = await request.json() as App.Run;
@@ -25,6 +25,6 @@ export const POST: Action<{ id: string }> = async ({ params, request }) => {
 	const run = await registerRun(data);
 
 	return {
-		location:  `/race/${params.id}/run/${run.id}`
+		location: `/admin/run/${run.id}`
 	};
 };

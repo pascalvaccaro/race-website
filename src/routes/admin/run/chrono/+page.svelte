@@ -43,24 +43,29 @@
 
 	async function exportRuns(race: App.Race) {
 		loading = true;
-		const { runs, id } = race;
-		const data = [] as Pick<App.Run, 'chrono' | 'numberSign'>[];
-		for (const [numberSign, times] of timesMap.entries()) {
-			if (!times || !times.length) continue;
-			const lastTime = times[times.length - 1];
-			if (!lastTime || lastTime <= 0) continue;
-			const run = runs.find((r) => r.numberSign === numberSign);
-			const chrono = dayjs(lastTime).format('mm:ss.SSS');
-			if (!run) data.push({ numberSign, chrono });
-			else data.push({ ...run, chrono });
+		try {
+			const { runs = [] } = race;
+			const data = [] as Pick<App.Run, 'chrono' | 'numberSign'>[];
+			for (const [numberSign, times] of timesMap.entries()) {
+				if (!times || !times.length) continue;
+				const lastTime = times[times.length - 1];
+				if (!lastTime || lastTime <= 0) continue;
+				const run = runs.find((r) => r.numberSign === numberSign);
+				const chrono = dayjs(lastTime).format('mm:ss.SSS');
+				if (!run) data.push({ numberSign, chrono });
+				else data.push({ ...run, chrono });
+			}
+			await fetch(`/admin/run/chrono`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ data, raceId: race.id })
+			});
+			timesMap = new Map<number, number[]>();
+		} catch (err) {
+			console.error(err);
+		} finally {
+			loading = false;
 		}
-		await fetch(`/race/${id}/chrono`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ data })
-		});
-		loading = false;
-		timesMap = new Map<number, number[]>();
 	}
 
 	function registerTime() {

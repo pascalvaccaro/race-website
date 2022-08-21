@@ -47,6 +47,27 @@ declare namespace App {
 		expiry: Date | null;
 		createdAt: Date;
 	}
+
+	interface AdminRole {
+		code: string;
+		description: string;
+		id: number;
+		name: string;
+	}
+
+	interface AdminUser {
+		blocked: boolean;
+		createdAt: Date;
+		email: string;
+		firstname: string;
+		id: number;
+		isActive: boolean;
+		lastname: string;
+		preferedLanguage: string | null;
+		roles: AdminRole[];
+		updatedAt: string;
+		username: string | null;
+	}
 }
 
 declare module 'svelte-fusioncharts';

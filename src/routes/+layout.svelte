@@ -13,17 +13,18 @@
 		background-position: right;
 		display: flex;
 		justify-content: center;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 	}
 	.wrapper {
-		min-height: calc(100vh - 16px);
+		min-height: calc(100vh - 1rem);
 		max-width: 520px;
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		flex-wrap: wrap;
-		padding: 8px 16px;
+		padding: 1rem;
 		box-sizing: border-box;
 	}
 
@@ -62,13 +63,14 @@
 		background-color: white;
 		min-height: 1rem;
 	}
-	:global(label, input, button, select) {
+	:global(label, input, button, select, a) {
 		box-shadow: 3px 3px 2px black;
 		border: 0;
 		border-radius: 4px;
 		outline: none;
+		text-decoration: none;
 	}
-	:global(button) {
+	:global(button, a) {
 		cursor: pointer;
 	}
 </style>
