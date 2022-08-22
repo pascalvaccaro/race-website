@@ -4,6 +4,7 @@
 	import Panel from './Panel.svelte';
 	import RadioInput from './RadioInput.svelte';
 	import Loading from './Loading.svelte';
+	import TwoCols from './TwoCols.svelte';
 	import { run, setRunner } from '$lib/store/run';
 
 	export let race: App.Race;
@@ -23,46 +24,48 @@
 	/>
 
 	<SmartInput name="runnerId">
-		<div class="two-cols">
+		<TwoCols>
 			<input
+				slot="left"
 				placeholder="Prénom"
 				required
 				name="runner.firstname"
 				bind:value={$run.runner.firstname}
 			/>
 			<input
+				slot="right"
 				placeholder="Nom de famille"
 				required
 				name="runner.lastname"
 				bind:value={$run.runner.lastname}
 			/>
-		</div>
+		</TwoCols>
 		<input type="hidden" name="run.runner" bind:value={$run.runner.id} />
 	</SmartInput>
 
   <input type="hidden" name="run.race" value={race.id} />
-	<div class="two-cols">
-		<CheckInput name="run.walking" bind:value={$run.walking}>
+	<TwoCols>
+		<CheckInput slot="left" name="run.walking" bind:value={$run.walking}>
 			<span>Marche</span>
     </CheckInput>
-		<CheckInput name="run.copyright" bind:value={$run.copyright}>
+		<CheckInput slot="right" name="run.copyright" bind:value={$run.copyright}>
 			Droit à l'image
 		</CheckInput>
-	</div>
+	</TwoCols>
 
 	<Panel
 		title="Mineur..."
 		bind:value={$run.runner.minor}
 	>
 		<div class="minor">
-			<div class="two-cols">
-				<RadioInput name="runner.child" value={false} bind:group={$run.runner.child}>
+			<TwoCols>
+				<RadioInput slot="left" name="runner.child" value={false} bind:group={$run.runner.child}>
 					entre 16 et 18 ans
 				</RadioInput>
-				<RadioInput name="runner.child" value={true} bind:group={$run.runner.child}>
+				<RadioInput slot="right" name="runner.child" value={true} bind:group={$run.runner.child}>
 					moins de 16 ans
 				</RadioInput>
-			</div>
+			</TwoCols>
 		</div>
 	</Panel>
 
@@ -71,11 +74,13 @@
 
 <style>
 	form {
-		position: relative;
+		box-sizing: border-box;
 		min-height: 420px;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-evenly;
+		align-items: flex-start;
+		justify-content: center;
+		gap: 1rem;
 	}
 	form > * {
 		margin: 1rem 0;
@@ -100,13 +105,5 @@
 		background-color: blue;
 		color: white;
 		cursor: pointer;
-	}
-	div.minor > * {
-		margin-bottom: 0.5rem;
-	}
-	div.minor {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
 	}
 </style>

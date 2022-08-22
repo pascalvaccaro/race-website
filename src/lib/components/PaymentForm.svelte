@@ -7,7 +7,7 @@
 	onMount(() =>
 		fetch(`${env.PUBLIC_STRAPI_URL}/strapi-stripe/getProduct/0/100/price/asc`)
 			.then((res) => res.json())
-			.then((res) => (products = res.res as StripeProduct[]))
+			.then((res) => (products = res.data as StripeProduct[]))
 	);
 
 	async function selectProduct(product: StripeProduct) {

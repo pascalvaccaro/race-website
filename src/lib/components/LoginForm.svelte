@@ -20,9 +20,15 @@
 	{#if redirectPathname}
 	<input type="hidden" name="redirectPathname" value={redirectPathname} />
 	{/if}
-	<input placeholder="Adresse email" type="email" name="email" required />
+	<label>
+		Adresse email
+		<input placeholder="Adresse email" type="email" name="email" required />
+	</label>
 
-	<input placeholder="Mot de passe" type="password" name="password" required />
+	<label>
+		Mot de passe
+		<input placeholder="Mot de passe" type="password" name="password" required />
+	</label>
 
 	<button type="submit">Me connecter</button>
 </form>
@@ -33,17 +39,21 @@
 		min-height: 420px;
 		display: flex;
 		flex-direction: column;
+		width: 100%;
 		justify-content: space-evenly;
 	}
 	form > * {
 		margin: 1rem 0;
 	}
-	input {
-		padding: 8px 16px;
+	label {
+		display: flex;
+		flex-direction: column;
 	}
 	input {
-		max-height: 1.5rem;
-		padding: 8px;
+		box-sizing: border-box;
+		width: 100%;
+		max-height: 2.5rem;
+		padding: 8px 16px;
 		font-size: 1.25rem;
 	}
 	input::placeholder {

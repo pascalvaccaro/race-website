@@ -16,7 +16,8 @@
 		justify-content: center;
 		flex-direction: column;
 		text-align: center;
-		padding: 4px 8px;
+		padding: 8px;
+		width: 100%;
 	}
 	input[type='radio'] {
 		margin-top: 8px !important;

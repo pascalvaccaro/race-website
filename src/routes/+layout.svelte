@@ -1,9 +1,67 @@
+<script lang="ts">
+	import Nav from '$lib/components/Nav.svelte';
+</script>
+
 <div class="wrapper">
-	<slot name="header" />
-	<slot />
+	<nav><Nav /></nav>
+	<main>
+		<div class="page">
+			<slot />
+		</div>
+	</main>
 </div>
 
 <style>
+	.wrapper {
+		min-height: 100vh;
+		width: 100vw;
+		max-width: 520px;
+		box-sizing: border-box;
+	}
+	nav {
+		min-height: 3rem;
+		position: fixed;
+		top: 0;
+		left: 0;
+		display: flex;
+		justify-content: space-between;
+	}
+	main {
+		box-sizing: border-box;
+		height: 100%;
+		width: 100%;
+		padding: 0 1rem;
+		padding-top: 4rem;
+		flex-grow: 1;
+	}
+	.page {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		max-width: 520px;
+		height: 100%;
+		align-items: center;
+		justify-content: center;
+	}
+
+	@media screen and (min-width: 520px) {
+		.wrapper {
+			max-width: 100%;
+			display: flex;
+			flex-direction: row;
+			gap: 2rem;
+		}
+		nav {
+			width: 16rem;
+			height: 100%;
+			position: static;
+		}
+		main {
+			max-width: 100%;
+			width: 100%;
+			padding-top: 0;
+		}
+	}
 	:global(body) {
 		margin: 0;
 		width: 100vw;
@@ -13,25 +71,7 @@
 		background-position: right;
 		display: flex;
 		justify-content: center;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-	}
-	.wrapper {
-		min-height: calc(100vh - 1rem);
-		max-width: 520px;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex-wrap: wrap;
-		padding: 1rem;
-		box-sizing: border-box;
-	}
-
-	@media screen and (min-width: 520px) {
-		.wrapper {
-			max-width: 100%;
-		}
+		font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 	}
 	:global(.alert) {
 		padding: 4px 8px;
@@ -40,21 +80,6 @@
 		margin: 0;
 		font-weight: bold;
 		background-color: rgba(255, 0, 0, 0.2);
-	}
-	:global(.two-cols) {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		width: 100%;
-	}
-	:global(.two-cols > *:last-child) {
-		margin-left: 4px;
-	}
-	:global(.two-cols > *:first-child) {
-		margin-right: 4px;
-	}
-	:global(.two-cols > *) {
-		width: calc(50% - 16px);
 	}
 	:global(label, input, select) {
 		display: flex;

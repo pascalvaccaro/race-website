@@ -16,6 +16,7 @@
 		flex-direction: column;
 		text-align: center;
 		padding: 4px 8px;
+		width: 100%;
 	}
 	input[type='checkbox'] {
 		margin-top: 8px !important;

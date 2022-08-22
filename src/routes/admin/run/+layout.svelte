@@ -35,7 +35,7 @@
 	.run-wrapper {
 		width: 100%;
 		height: 100%;
-		margin-top: 1rem;
+		margin: 1rem 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

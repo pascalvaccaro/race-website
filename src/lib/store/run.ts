@@ -54,8 +54,9 @@ export const needs = derived(run, (value) => ({
 	authorization:
 		value.runner.minor &&
 		!value.runner.child &&
-		!value.runner.attachments.some(
-			(attachment) => attachment.name.includes('authorization') && attachment.valid
-		),
+		(!value.runner.attachments?.length ||
+			!value.runner.attachments.some(
+				(attachment) => attachment.name.includes('authorization') && attachment.valid
+			)),
 	parents: value.runner.child
 }));

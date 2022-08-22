@@ -25,7 +25,7 @@ export type StripeTrx = {
 
 const authFetch = fetchFactory(STRAPI_API_TOKEN, (res: Response) => res.json());
 
-export async function checkOutProduct(product: StripeProduct) {
+export async function checkOutProduct(product: StripeProduct, redirections: Record<string, string>) {
 	const endpoint = new URL('/strapi-stripe/createCheckoutSession/', STRAPI_URL);
 
 	const response = await authFetch<StripeSession>(endpoint, {
@@ -35,7 +35,8 @@ export async function checkOutProduct(product: StripeProduct) {
 			stripePlanId: product.stripePlanId,
 			isSubscription: product.isSubscription,
 			productId: product.id,
-			productName: product.title
+			productName: product.title,
+			...redirections,
 		})
 	});
 

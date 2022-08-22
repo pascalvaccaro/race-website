@@ -1,14 +1,15 @@
 <div>
-	<slot />
+	<slot name="left" />
+	<slot name="right" />
 </div>
 
 <style>
 	div {
+		box-sizing: border-box;
+		width: 100%;
 		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
-	div > * {
-		width: 50% !important;
+		flex-direction: row;
+		justify-content: space-between;
+		gap: 1rem;
 	}
 </style>

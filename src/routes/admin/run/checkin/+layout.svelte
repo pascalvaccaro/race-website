@@ -1,22 +1,29 @@
-<main class="container">
-	<slot />
-	<footer class="selector">
+<main>
+	<section>
+		<slot />
+	</section>
+	<footer>
 		<a href="/admin/run/checkin/scanner">Scanner un QR Code</a>
 		<a href="/admin/run/checkin/runner">Inscrire un nouveau participant</a>
 	</footer>
 </main>
 
 <style>
-	main.container {
+	main {
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
 		align-items: center;
-		width: 100%;
+		max-width: 520px;
 		height: 100%;
 	}
 
-	footer.selector {
+	main > section {
+		flex-grow: 1;
+		width: 100%;
+	}
+
+	footer {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-around;
@@ -26,7 +33,7 @@
 		background-color: rgba(0, 0, 0, 0.75);
 		padding: 1rem;
 	}
-	footer.selector > a {
+	footer > a {
 		max-width: 40%;
 		padding: 1rem 2rem;
 		border-radius: 1rem;

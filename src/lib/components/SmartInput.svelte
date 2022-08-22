@@ -24,6 +24,7 @@
 
 <style>
 	select {
+		box-sizing: border-box;
 		padding: 4px 16px;
 		min-height: 2.5rem;
 	}
