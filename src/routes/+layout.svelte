@@ -88,7 +88,7 @@
 		background-color: white;
 		min-height: 1rem;
 	}
-	:global(label, input, button, select, a) {
+	:global(label, input, button, select) {
 		box-shadow: 3px 3px 2px black;
 		border: 0;
 		border-radius: 4px;

@@ -54,15 +54,13 @@
 		<input type="hidden" name="run.runner" bind:value={$run.runner.id} />
 	</SmartInput>
 
-	<TwoCols>
-		<CheckInput slot="left" name="run.walking" bind:value={$run.walking}>
-			<p style="margin: 0;">{pronoun} marche</p>
-			<small>(et promet{parent ? '' : 's'} de ne pas courir !)</small>
-		</CheckInput>
-		<CheckInput slot="right" name="run.copyright" bind:value={$run.copyright}>
-			{pronoun} donne {parent ? 's' : 'm'}on droit à l'image
-		</CheckInput>
-	</TwoCols>
+	<CheckInput name="run.walking" bind:value={$run.walking}>
+		<p style="margin: 0;">{pronoun} marche</p>
+		<small>(et {parent ? 's' : 'm'}'engage à ne pas courir sur l'ensemble du parcours)</small>
+	</CheckInput>
+	<CheckInput name="run.copyright" bind:value={$run.copyright} required>
+		<p style="margin: 0;">{parent ? 'Il ' : "J'"}accepte le <a href="/assets/reglement.pdf" target="_blank">réglement de la course A Ton Allure</a></p>
+	</CheckInput>
 
 	{#if $needs.certificate}
 		<label for="certificate">
@@ -71,14 +69,17 @@
 		</label>
 	{/if}
 
-	<Panel title={`${parent ? 'Il/elle est' : 'Je suis'} mineur-e et...`} bind:value={$run.runner.minor}>
+	<Panel
+		title={`${parent ? 'Il/elle est' : 'Je suis'} mineur-e et...`}
+		bind:value={$run.runner.minor}
+	>
 		<div class="minor">
 			<TwoCols>
 				<RadioInput slot="left" name="runner.child" value={false} bind:group={$run.runner.child}>
-					<small>{parent ? 'il/elle a' : 'j\'ai'} entre 16 et 18 ans</small>
+					<small>{parent ? 'il/elle a' : "j'ai"} entre 16 et 18 ans</small>
 				</RadioInput>
 				<RadioInput slot="right" name="runner.child" value={true} bind:group={$run.runner.child}>
-					<small>{parent ? 'il/elle a' : 'j\'ai'} moins de 16 ans</small>
+					<small>{parent ? 'il/elle a' : "j'ai"} moins de 16 ans</small>
 				</RadioInput>
 			</TwoCols>
 			{#if $needs.authorization}
@@ -141,7 +142,5 @@
 		justify-content: center;
 		gap: 0.5rem;
 		margin: 0.5rem 0;
-	}
-	div.minor > * {
 	}
 </style>

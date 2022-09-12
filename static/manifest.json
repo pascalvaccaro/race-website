@@ -15,16 +15,23 @@
   "theme_color": "#3367D6",
   "shortcuts": [
     {
+      "name": "Ma prochaine course",
+      "short_name": "Welcome",
+      "url": "/race/next?source=pwa",
+      "description": "S'inscrire à la prochaine course",
+      "icons": [{ "src": "/icons/logo-96x96.png", "sizes": "96x96" }]
+    },
+    {
       "name": "Accueillir les participants",
       "short_name": "Welcome",
-      "url": "/race/next/run?source=pwa",
+      "url": "/admin/run/checkin?source=pwa",
       "description": "Accueillir les participants avant la course",
       "icons": [{ "src": "/icons/logo-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "Enregistrer les temps",
       "short_name": "Chronométrer",
-      "url": "/race/next?source=pwa",
+      "url": "/admin/run/chrono?source=pwa",
       "description": "Enregistrer les temps de passage de chaque participant",
       "icons": [{ "src": "/icons/logo-96x96.png", "sizes": "96x96" }]
     }
